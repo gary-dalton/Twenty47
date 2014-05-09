@@ -1,0 +1,2 @@
+User {{ user.firstName }} has just logged in.
+

@@ -1,0 +1,19 @@
+New user {{ user.firstName }} {{ user.lastName }} has just confirmed their account.
+
+- {{ user.firstName }}
+- {{ user.lastName }}
+- {{ user.email }}
+
+You may take action on this account by visiting {{ url_for('dispatch.index',  _external=True) }}.
+
+Alternatively, there are 3 possible actions from included links.
+
+Alternatively, you may APPROVE and GRANT a "full user" role by clicking this link:
+{{ approve_grant_url}}
+
+or APPROVE the user with a minimal role:
+{{ approve_url }}
+
+or DENY this user access by clicking this link:
+{{ deny_url }}
+

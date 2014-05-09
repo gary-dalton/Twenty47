@@ -1,0 +1,4 @@
+There was an error in the function {{ func }}.
+
+The error was:
+{{ e }}

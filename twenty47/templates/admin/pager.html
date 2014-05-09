@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+
+<div class=pagination>
+    Page 
+    {%- for page in users.iter_pages() %}
+        {% if page %}
+            {% if page != users.page %}
+                <a href="{{ url_for("admin.user_pager", page=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {%- endfor %}
+</div>
+
+
+
+    <h2><a href="#users">Users</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Name</th>
+            <th>Last Login</th>
+            <th>Roles</th>
+            <th>Subscription</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>
+                    {% if user.last_login_at %}{{ user.last_login_at.strftime('%Y-%m-%d') }}
+                    {% else %}Never
+                    {% endif %}
+                </td>
+                <td>
+                    {% for role in user.roles %}
+                        {{ role.name }}
+                    {% endfor %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" id="btn-status-none-{{ user.id }}" class="btn-xs btn btn-default btn-status-none" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            <span id="glyph-status-none-{{ user.id }}" 
+                            {% if user.subscription.status == "NONE" or user.subscription.status is not defined %}
+                                class="glyphicon glyphicon-check"
+                            {% endif %}
+                            ></span>
+                            None
+                        </button>
+                        <button type="button" id="btn-status-denied-{{ user.id }}" class="btn-xs btn btn-danger btn-status-denied" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            <span id="glyph-status-denied-{{ user.id }}" 
+                            {% if user.subscription.status == "DENIED" %}
+                                class="glyphicon glyphicon-check"
+                            {% endif %}
+                            ></span>
+                            Denied
+                        </button>
+                        <button type="button" id="btn-status-pending-{{ user.id }}" class="btn-xs btn btn-warning btn-status-pending" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            <span id="glyph-status-pending-{{ user.id }}" 
+                            {% if user.subscription.status == "PENDING" %}
+                                class="glyphicon glyphicon-check"
+                            {% endif %}
+                            ></span>
+                            Pending
+                        </button>
+                        <button type="button" id="btn-status-approved-{{ user.id }}" class="btn-xs btn btn-success btn-status-approved" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            <span id="glyph-status-approved-{{ user.id }}" 
+                            {% if user.subscription.status == "APPROVED" %}
+                                class="glyphicon glyphicon-check"
+                            {% endif %}
+                            ></span>
+                            Approved
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{{ url_for("admin.user_edit", uid=user.id) }}" class="btn btn-primary btn-xs">Edit</a>
+                        
+                        <button type="button" id="btn-deactivate-{{ user.id }}" class="btn-xs btn btn-success btn-deactivate{% if user.active is sameas false %} hide{% endif %}" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            Deactivate
+                        </button>
+
+                        <button type="button" id="btn-activate-{{ user.id }}" class="btn-xs btn btn-warning btn-activate{% if user.active is sameas true %} hide{% endif %}" data-page="{{ url_for('admin.user_edit', uid=user.id) }}" data-user="{{ user.id }}">
+                            Activate
+                        </button>
+
+                        <a href="{{ url_for("admin.remove", id=user.id, action="user") }}" class="btn btn-primary btn-xs">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}

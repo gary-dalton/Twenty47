@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- Run a local server from folder using
+python -m SimpleHTTPServer
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Gary Dalton">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Twenty47</title>
+   
+    <!-- styles 
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css"  rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="https://secure.npexchange.org/libs/ggis/css/arc.css" rel="stylesheet">
+    
+    <link href="https://secure.npexchange.org/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="https://secure.npexchange.org/libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/sunny/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <link href="https://secure.npexchange.org/libs/ggis/css/arc.css" rel="stylesheet">
+    -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/anytime.css">
+    <link href="https://secure.npexchange.org/libs/ggis/css/arc.css" rel="stylesheet">
+    
+    <style>
+    body {
+      padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+    }
+    </style>
+    
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+  </head>
+
+<body>
+    
+{%- block topbar -%}
+<!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('dispatch.index') }}">Twenty47</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{ url_for('dispatch.index') }}">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="{{ url_for('admin.user_list') }}">Admin</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.firstName }}  <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ url_for_security('logout') }}">Logout</a></li>
+                <li><a href="{{ url_for_security('change_password') }}">Change Password</a></li>
+                <li><a href="/subscriber">Manage Subscription</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+           
+{%- endblock -%}
+
+    <div class="container">
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for category, message in messages %}
+                            <li class="alert alert-{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+              
+            {% block page_header %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% block js_footer %}
+        <!-- javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+          
+          <!--
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap.min.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+          
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-transition.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-alert.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-modal.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-dropdown.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-scrollspy.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-tab.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-carousel.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-tooltip.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-popover.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-button.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-collapse.js"></script>
+          <script src="https://secure.npexchange.org/libs/bootstrap/js/bootstrap-typeahead.js"></script>
+          
+          <script src="https://secure.npexchange.org/libs/ggis/js/sisyphus.min.js"></script>
+          <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+          -->
+          
+          <script src="/static/js/dispatch.js"></script>
+          <script src="/static/js/anytime.js"></script>
+    {% endblock %}
+  </body>
+</html>

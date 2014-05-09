@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% import "_forms.html" as forms %}
+    <hr>
+    <h2>Add a child</h2>
+    <form action="." method="post">
+        {{ forms.render(form) }}
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Add">
+        </div>
+    </form>
+    
+{% endblock %}

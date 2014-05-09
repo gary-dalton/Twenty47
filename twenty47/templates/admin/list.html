@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h2><a href="#users">Users</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Last Login</th>
+            <th>Roles</th>
+            <th>Subscription</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>
+                    {% if user.last_login_at %}{{ user.last_login_at.strftime('%Y-%m-%d') }}
+                    {% else %}Never
+                    {% endif %}
+                </td>
+                <td>
+                    {% for role in user.roles %}
+                        {{ role.name }}
+                    {% endfor %}
+                </td>
+                <td>
+                    <form action="{{ url_for("admin.user_edit", uid=user.id) }}" method="post">
+                        {% if not user.subscription %}
+                            None
+                        {% elif user.subscription.enabled %}
+                            <input id="action" name="action" type="hidden" value="disable">
+                            <input type="submit" class="btn btn-success" value="Disable">
+                        {% else %}
+                            <input id="action" name="action" type="hidden" value="enable">
+                            <input type="submit" class="btn btn-warning" value="Enable">
+                        {% endif %}
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for("admin.user_edit", uid=user.id) }}" method="post">
+                        <a href="{{ url_for("admin.user_edit", uid=user.id) }}" class="btn btn-primary">Edit</a>
+                        {% if user.active is sameas true %}
+                            <input id="action" name="action" type="hidden" value="deactivate">
+                            <input type="submit" class="btn btn-success" value="Deactivate">
+                        {% else %}
+                            <input id="action" name="action" type="hidden" value="activate">
+                            <input type="submit" class="btn btn-warning" value="Activate">
+                        {% endif %}
+                        <a href="{{ url_for("admin.remove", id=user.id, action="user") }}" class="btn btn-primary">Delete</a>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+    
+    <h2><a href="#roles">Roles</a></h2>
+    <table  class="table table-condensed table-striped">
+        <thead>
+            <th>Role</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for role in roles %}
+            <tr>
+                <td>{{ role.name }}</td>
+                <td>{{ role.description }}</td>
+                <td><a href="{{ url_for("admin.role_edit", id=role.id) }}" class="btn btn-primary">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

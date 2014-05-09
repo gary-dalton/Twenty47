@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% import "_forms.html" as forms %}
+
+{% block content %}
+    <h2>
+        {% if create %}
+            Add new User
+        {% else %}
+            Edit User
+        {% endif %}
+    </h2>
+
+    <form action="?{{ request.query_string }}" method="post">
+        {{ forms.render(form) }}
+        <div class="actions">
+            <input type="submit" class="btn primary" value="save">
+            <a href="{{ url_for("admin.user_list") }}" class="btn secondary">Cancel</a>
+        </div>
+    </form>
+    
+{% endblock %}

@@ -1,0 +1,30 @@
+<p>A new Dispatch was performed. Here are some details:</p>
+
+<p>TIME<br />
+{{ dispatch.incidentTime }}</p>
+
+<p>ADDRESS<br />
+{{ dispatch.streetAddress }}<br />
+{% if dispatch.moreStreetAddress -%}
+    {{ dispatch.moreStreetAddress }}<br />
+{%- endif %}
+{% if dispatch.city -%}
+    {{ dispatch.city }},
+{%- endif %}
+{{ dispatch.state }} {{ dispatch.postalCode }}
+</p>
+
+<p>COUNTY<br />
+{{ dispatch.county }}</p>
+
+<p>DETAILS<br />
+Type:     {{ dispatch.incidentType }}<br />
+Impacted: {{ dispatch.unitsImpacted }}<br />
+Request:  {{ dispatch.assistanceRequested }}</p>
+
+<p>RESPONDER<br />
+Name:  {{ dispatch.responderName }}<br />
+Phone: {{ dispatch.responderPhone }}</p>
+
+<p>DISPATCH OPERATOR<br />
+{{ dispatch.operator }}</p>

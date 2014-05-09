@@ -1,0 +1,17 @@
+<p>User {{ user.firstName }} has just Subscription Pending</p>
+<ul>
+    <li>{{ user.firstName }}</li>
+    <li>{{ user.lastName }}</li>
+    <li>{{ user.subscription.methods }}</li>
+    <li>{{ user.subscription.email }}</li>
+    <li>{{ user.subscription.smsPhone }}</li>
+
+</ul>
+
+<p>You may take action on this subscription logging in at {{ url_for('dispatch.index',  _external=True) }}.</p>
+
+<p>Alternatively, you may APPROVE by clicking this link:<br />
+{{ approve_url }}</p>
+
+<p>or DENY by clicking this link:<br />
+{{ deny_url }}</p>

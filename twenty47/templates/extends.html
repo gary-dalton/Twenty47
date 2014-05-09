@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for kid in kids %}
+      <h2><a href="{{ url_for('kids.detail', kidid=kids._id) }}">{{ kid.lastName }}</a></h2>
+      <p>{{ kid.body|truncate(100) }}</p>
+      <p>
+        {{ kid.created_at.strftime('%H:%M %Y-%m-%d') }} |
+        {% with total=kid.comments|length %}
+            {{ total }} comment {%- if total > 1 %}s{%- endif -%}
+        {% endwith %}
+      </p>
+    {% endfor %}
+{% endblock %}

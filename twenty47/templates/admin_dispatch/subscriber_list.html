@@ -1,0 +1,42 @@
+{% extends "admin_dispatch/base.html" %}
+
+{% block content %}
+    <h2><a href="#subscribers">Subscribers </a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Subscriber</th>
+            <th>Methods</th>
+            <th>Email</th>
+            <th>SMS Phone</th>
+            <th>Enabled</th>
+        </thead>
+        <tbody>
+            {% for subscriber in subscribers %}
+            <tr>
+                <td>{{ subscriber.user }}</td>
+                <td>{{ subscriber.methods }}</td>
+                <td>{{ subscriber.email }}</td>
+                <td>{{ subscriber.smsPhone }}</td>
+                <td>{{ subscriber.smsPhone }}</td>
+                <td>{{ subscriber.enabled }}</td>
+                <td>
+                    <form action="{{ url_for("admin_dispatch.update_subscriber", id=subscriber.id) }}" method="post">
+                        <a href="{{ url_for("admin_dispatch.update_subscriber", id=subscriber.id) }}" class="btn primary">Edit</a>
+                        {% if subscriber.enabled is sameas true %}
+                            <input id="action" name="action" type="hidden" value="disable">
+                            <input type="submit" class="btn primary" value="Disable">
+                        {% else %}
+                            <input id="action" name="action" type="hidden" value="enable">
+                            <input type="submit" class="btn primary" value="Enable">
+                        {% endif %}
+                        <a href="{{ url_for("admin_dispatch.delete", id=type.id, action="IncidentType") }}" class="btn primary">Delete</a>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+
+{% endblock %}

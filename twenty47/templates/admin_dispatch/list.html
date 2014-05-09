@@ -1,0 +1,79 @@
+{% extends "admin_dispatch/base.html" %}
+
+{% block content %}
+    <h2><a href="#incidenttypes">Incident Types</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Incident Type</th>
+            <th>SMS Code</th>
+            <th>Order</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for type in incidenttypes %}
+            <tr>
+                <td>{{ type.name }}</td>
+                <td>{{ type.shortCode }}</td>
+                <td>{{ type.order }}</td>
+                <td>
+                    <a href="{{ url_for("admin_dispatch.update", id=type.id, action="IncidentType") }}" class="btn primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=type.id, action="IncidentType") }}" class="btn primary">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+    
+    <h2><a href="#unitsimpacted">Housing Units Impacted</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Housing Units</th>
+            <th>SMS Code</th>
+            <th>Order</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for units in unitsimpacted %}
+            <tr>
+                <td>{{ units.name }}</td>
+                <td>{{ units.shortCode }}</td>
+                <td>{{ units.order }}</td>
+                <td>
+                    <a href="{{ url_for("admin_dispatch.update", id=units.id, action="UnitsImpacted") }}" class="btn primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=units.id, action="UnitsImpacted") }}" class="btn primary">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+    
+    <h2><a href="#assistancerequested">Assistance Requested Types</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Assistance Requested</th>
+            <th>SMS Code</th>
+            <th>Order</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for assistance in assistancerequested %}
+            <tr>
+                <td>{{ assistance.name }}</td>
+                <td>{{ assistance.shortCode }}</td>
+                <td>{{ assistance.order }}</td>
+                <td>
+                    <a href="{{ url_for("admin_dispatch.update", id=assistance.id, action="AssistanceRequested") }}" class="btn primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=assistance.id, action="AssistanceRequested") }}" class="btn primary">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+
+{% endblock %}

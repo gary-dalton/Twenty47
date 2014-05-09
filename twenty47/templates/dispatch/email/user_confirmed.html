@@ -1,0 +1,18 @@
+<p>New user {{ user.firstName }} {{ user.lastName }} has just confirmed their account.</p>
+<ul>
+    <li>{{ user.firstName }}</li>
+    <li>{{ user.lastName }}</li>
+    <li>{{ user.email }}</li>
+</ul>
+
+<p>You may take action on this subscription logging in at {{ url_for('dispatch.index',  _external=True) }}.</p>
+<p>Alternatively, there are 3 possible actions from included links.</p>
+
+<p>Alternatively, you may APPROVE and GRANT a "full user" role by clicking this link:<br />
+{{ approve_grant_url }}</p>
+
+<p>or APPROVE the user with a minimal role:<br />
+{{ approve_url }}</p>
+
+<p>or DENY this user access by clicking this link:<br />
+{{ deny_url }}</p>

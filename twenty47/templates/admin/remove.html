@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% import "_forms.html" as forms %}
+
+{% block content %}
+  <h2>
+    Remove {{ action.capitalize() }}
+  </h2>
+
+  <form action="?{{ request.query_string }}" method="post">
+    {{ forms.render_disabled(form) }}
+    <div class="actions">
+      <input type="submit" class="btn primary" value="Delete">
+      <a href="{{ url_for("admin.index") }}" class="btn secondary">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,29 @@
+A new Dispatch was performed. Here are some details:
+
+TIME
+{{ dispatch.incidentTime }}
+
+ADDRESS
+{{ dispatch.streetAddress }}
+{% if dispatch.moreStreetAddress -%}
+    {{ dispatch.moreStreetAddress }}
+{%- endif %}
+{% if dispatch.city -%}
+    {{ dispatch.city }},
+{%- endif %}
+{{ dispatch.state }} {{ dispatch.postalCode }}
+
+COUNTY
+{{ dispatch.county }}
+
+DETAILS
+Type:     {{ dispatch.incidentType }}
+Impacted: {{ dispatch.unitsImpacted }}
+Request:  {{ dispatch.assistanceRequested }}
+
+RESPONDER
+Name:  {{ dispatch.responderName }}
+Phone: {{ dispatch.responderPhone }}
+
+DISPATCH OPERATOR
+{{ dispatch.operator }}

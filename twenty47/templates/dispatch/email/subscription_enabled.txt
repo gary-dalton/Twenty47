@@ -1,0 +1,16 @@
+User {{ user.firstName }} has a Subscription Pending
+
+- {{ user.firstName }}
+- {{ user.lastName }}
+- {{ user.subscription.methods }}
+- {{ user.subscription.email }}
+- {{ user.subscription.smsPhone }}
+
+You may take action on this subscription visiting {{ url_for('dispatch.index',  _external=True) }}.
+
+Alternatively, you may APPROVE by clicking this link:
+{{ approve_url }}
+
+or DENY by clicking this link:
+{{ deny_url }}
+
