@@ -38,6 +38,7 @@ class DispatchForm(Form):
     
     operator = HiddenField('Operator',[Length(max=200), InputRequired()], default='operator')
     incidentTime = DateTimeField('Incident Date and Time', [InputRequired()], default=datetime.datetime.now())
+    dispatchTime = DateTimeField('Dispatch Date and Time', [InputRequired()], default=datetime.datetime.now())
     streetAddress = StringField('Street Address', [Length(max=200), InputRequired()])
     moreStreetAddress = TextAreaField('More Street Address', [Length(max=255)])
     city = StringField('City', [Length(max=100)])

@@ -6,7 +6,10 @@ $(document).ready(function() {
       format: "%Y-%m-%d %T",
       askSecond: false,
     });
-    
+    $('#dispatchTime').AnyTime_picker({
+      format: "%Y-%m-%d %T",
+      askSecond: false,
+    });
    
     // GETS THE CSRF TOKEN SO THAT AJAX FORMS WORK start
     var csrftoken = $('meta[name=csrf-token]').attr('content')

@@ -135,6 +135,7 @@ class AssistanceRequested(db.Document):
 class Dispatch(db.Document):
     operator = db.StringField(max_length=200, required=True)
     incidentTime = db.DateTimeField(default=datetime.datetime.now(), required=True)
+    dispatchTime = db.DateTimeField(default=datetime.datetime.now(), required=True)
     streetAddress = db.StringField(max_length=255, required=True)
     moreStreetAddress = db.StringField(max_length=255)
     city = db.StringField(max_length=200)
