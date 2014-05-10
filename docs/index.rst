@@ -11,6 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+Documentation
+=============
+
+* For Users, :doc:for_users
+* For Developers
 
 
 Indices and tables

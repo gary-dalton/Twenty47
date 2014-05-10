@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # Load the config
-app.config.from_pyfile('config.py')
+app.config.from_pyfile('local.config.py')
 
 app.config.update(dict(
 	DEBUG=True,

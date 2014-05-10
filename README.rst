@@ -5,11 +5,16 @@ Twenty47 is a small webapp to manage and provide notifications via
 Amazon Web Services (AWS) Simple Notification Service (SNS) for 
 American Red Cross dispatches.
 
-Look how easy it is to use:
+Some setup is required:
 
     import project
-    # Get your stuff done
+    # Skip this for now
     project.do_stuff()
+    
+Documentation
+-------------
+- For Users, :doc:docs/for_users
+- For Developers
 
 Features
 --------
