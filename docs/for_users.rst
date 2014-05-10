@@ -56,7 +56,29 @@ Once you have confirmed, you will be directed to a page similar to this:
 .. image:: _static/email_sub_confirm.png
    :alt: Your email is confirmed
 
+SMS Phone Confirmation
+^^^^^^^^^^^^^^^^^^^^^^
+Once a Subscription Manager approves your request, you will receive an 
+SMS text requiring you to confirm your request. That SMS will come from
+30304. You must then reply "YES DISPATCH". Finally, you will receive a
+confirmation. All SMS notifications will come from 30304 and include 
+"DISPATCH>"
 
+See the image to understand this more clearly.
+
+.. image:: _static/sms_text.png
+   :alt: SMS confirmation thread
+   
+Changing Subscription
+---------------------
+Once your subscription is approved, you may return to the Subscriber
+form to make any changes you wish.
+
+Resending Confirmation
+----------------------
+Ocassionally, it may be neccessary to resend the subsciption confirmation
+email or text. Once you are approved for subscriptions, a resend
+confirmation button appears on the form.
 
 
 Indices and tables
