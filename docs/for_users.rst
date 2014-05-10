@@ -14,10 +14,11 @@ is then pushed to email or SMS subscribers. For most users, there are
 
 .. image:: _static/dispatch_create.png
    :alt: Create a new dispatch form
+   :vertical-align: top
    
 .. image:: _static/subscriber.png
    :alt: Manage your subscription form
-   :align: top
+   :vertical-align: top
 
 
 
