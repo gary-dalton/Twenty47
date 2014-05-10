@@ -48,6 +48,8 @@ class Detail(MethodView):
         #'user': {'default': current_user, 'widget': widgets.HiddenInput()},
         del form_cls.enabled
         del form_cls.status
+        del form_cls.email_arn
+        del form_cls.sms_arn
 
         user = User.objects.get_or_404(id=current_user.id)
         if not user.subscription:
