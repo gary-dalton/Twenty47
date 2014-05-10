@@ -13,10 +13,12 @@ is then pushed to email or SMS subscribers. For most users, there are
 2 forms available.
 
 The Dispatch Create form
+
 .. image:: _static/dispatch_create.png
    :alt: Create a new dispatch form
 
 The Subscriber form
+
 .. image:: _static/subscriber.png
    :alt: Manage your subscription form
    
