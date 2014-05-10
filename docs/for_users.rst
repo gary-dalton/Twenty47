@@ -12,15 +12,13 @@ Twenty47 allows simple input of basic dispatch information. This data
 is then pushed to email or SMS subscribers. For most users, there are
 2 forms available.
 
-.. figure:: _static/dispatch_create.png
+The Dispatch Create form
+.. image:: _static/dispatch_create.png
    :alt: Create a new dispatch form
-   
-   The Dispatch Create form
-   
-.. figure:: _static/subscriber.png
+
+The Subscriber form
+.. image:: _static/subscriber.png
    :alt: Manage your subscription form
-   
-   The Subscriber form
    
 The use of both these forms should be self-explanatory. Upon submission,
 Dispatch Create sends a notification to all subscribers. The effects of 
