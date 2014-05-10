@@ -1,7 +1,13 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
-
+<hr />
+<p><a href="{{ url_for("admin.user_create") }}" class="btn btn-primary">
+    Add User</a> Make certain user does not already exist prior to 
+    adding here. Also, it is best if the user is added using the 
+    standard registration / confirmation process.
+</p>
+<hr />
 
 <div class=pagination>
     Page 

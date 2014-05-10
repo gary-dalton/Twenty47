@@ -1,61 +1,82 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
-    <h2><a href="#users">Users</a></h2>
+    <hr />
+    
+    <h2><a href="#incidenttypes">Incident Types</a></h2>
     <table class="table table-condensed table-striped">
         <thead>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Last Login</th>
-            <th>Roles</th>
-            <th>Subscription</th>
+            <th>Incident Type</th>
+            <th>SMS Code</th>
+            <th>Display Order</th>
             <th>Actions</th>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for type in incidenttypes %}
             <tr>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
+                <td>{{ type.name }}</td>
+                <td>{{ type.shortCode }}</td>
+                <td>{{ type.order }}</td>
                 <td>
-                    {% if user.last_login_at %}{{ user.last_login_at.strftime('%Y-%m-%d') }}
-                    {% else %}Never
-                    {% endif %}
-                </td>
-                <td>
-                    {% for role in user.roles %}
-                        {{ role.name }}
-                    {% endfor %}
-                </td>
-                <td>
-                    <form action="{{ url_for("admin.user_edit", uid=user.id) }}" method="post">
-                        {% if not user.subscription %}
-                            None
-                        {% elif user.subscription.enabled %}
-                            <input id="action" name="action" type="hidden" value="disable">
-                            <input type="submit" class="btn btn-success" value="Disable">
-                        {% else %}
-                            <input id="action" name="action" type="hidden" value="enable">
-                            <input type="submit" class="btn btn-warning" value="Enable">
-                        {% endif %}
-                    </form>
-                </td>
-                <td>
-                    <form action="{{ url_for("admin.user_edit", uid=user.id) }}" method="post">
-                        <a href="{{ url_for("admin.user_edit", uid=user.id) }}" class="btn btn-primary">Edit</a>
-                        {% if user.active is sameas true %}
-                            <input id="action" name="action" type="hidden" value="deactivate">
-                            <input type="submit" class="btn btn-success" value="Deactivate">
-                        {% else %}
-                            <input id="action" name="action" type="hidden" value="activate">
-                            <input type="submit" class="btn btn-warning" value="Activate">
-                        {% endif %}
-                        <a href="{{ url_for("admin.remove", id=user.id, action="user") }}" class="btn btn-primary">Delete</a>
-                    </form>
+                    <a href="{{ url_for("admin_dispatch.update", id=type.id, action="IncidentType") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=type.id, action="IncidentType") }}" class="btn btn-primary">Delete</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    
+    <hr />
+    
+    <h2><a href="#unitsimpacted">Housing Units Impacted</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Housing Units</th>
+            <th>SMS Code</th>
+            <th>Display Order</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for units in unitsimpacted %}
+            <tr>
+                <td>{{ units.name }}</td>
+                <td>{{ units.shortCode }}</td>
+                <td>{{ units.order }}</td>
+                <td>
+                    <a href="{{ url_for("admin_dispatch.update", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <hr />
+    
+    <h2><a href="#assistancerequested">Assistance Requested Types</a></h2>
+    <table class="table table-condensed table-striped">
+        <thead>
+            <th>Assistance Requested</th>
+            <th>SMS Code</th>
+            <th>Display Order</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for assistance in assistancerequested %}
+            <tr>
+                <td>{{ assistance.name }}</td>
+                <td>{{ assistance.shortCode }}</td>
+                <td>{{ assistance.order }}</td>
+                <td>
+                    <a href="{{ url_for("admin_dispatch.update", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin_dispatch.delete", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
     
     <hr />
     

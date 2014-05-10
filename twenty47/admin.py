@@ -29,10 +29,28 @@ from flask import Blueprint, request, redirect, render_template, url_for, flash,
 from flask.views import MethodView
 from flask.ext.mongoengine.wtf import model_form
 from flask.ext.security import login_required, roles_required, script
-from twenty47.models import Role, User, user_datastore, Subscriber
+from twenty47.models import Role, User, user_datastore, Subscriber, \
+        IncidentType, UnitsImpacted, AssistanceRequested
 from twenty47 import app, debug, subscription_updated, sns_error
 from twenty47 import utils
 from itsdangerous import BadSignature
+
+
+
+
+class List(MethodView):
+    decorators = [login_required, roles_required('Admin')]
+    
+
+    def get(self):
+        incidenttypes = self.clsIncidentTypes.objects.all()
+        unitsimpacted = self.clsUnitsImpacted.objects.all()
+        assistancerequested = self.clsAssistanceRequested.objects.all()
+        return render_template('admin_dispatch/list.html', 
+                incidenttypes=incidenttypes, 
+                unitsimpacted=unitsimpacted,
+                assistancerequested=assistancerequested,
+                )
 
 admin = Blueprint('admin', __name__, template_folder='templates')
 
@@ -50,13 +68,25 @@ class Pager(MethodView):
    
 class List(MethodView):
     decorators = [login_required, roles_required('Admin')]
-    cls = User
     clsRole = Role
+    clsIncidentTypes = IncidentType
+    clsUnitsImpacted = UnitsImpacted
+    clsAssistanceRequested = AssistanceRequested
 
     def get(self):
-        users = self.cls.objects.all()
         roles = self.clsRole.objects.all()
-        return render_template('admin/list.html', users=users, roles=roles)
+        incidenttypes = self.clsIncidentTypes.objects.all()
+        unitsimpacted = self.clsUnitsImpacted.objects.all()
+        assistancerequested = self.clsAssistanceRequested.objects.all()
+        context = {
+            "roles": roles,
+            "incidenttypes": incidenttypes,
+            "unitsimpacted": unitsimpacted,
+            "assistancerequested": assistancerequested,
+        }
+        
+        
+        return render_template('admin/list.html', **context)
 
 class Detail(MethodView):
     decorators = [login_required, roles_required('Admin')]
