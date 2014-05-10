@@ -14,10 +14,12 @@ is then pushed to email or SMS subscribers. For most users, there are
 
 .. figure:: _static/dispatch_create.png
    :alt: Create a new dispatch form
+   
    The Dispatch Create form
    
 .. figure:: _static/subscriber.png
    :alt: Manage your subscription form
+   
    The Subscriber form
    
 The use of both these forms should be self-explanatory. Upon submission,
