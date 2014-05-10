@@ -17,6 +17,7 @@ is then pushed to email or SMS subscribers. For most users, there are
    
 .. image:: _static/subscriber.png
    :alt: Manage your subscription form
+   :align: top
 
 
 
