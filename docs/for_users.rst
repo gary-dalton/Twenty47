@@ -16,7 +16,7 @@ is then pushed to email or SMS subscribers. For most users, there are
 
 The Dispatch Create form
 ========================
-The use this should be self-explanatory. Upon submission,
+The use of Dispatch Create should be self-explanatory. Upon submission,
 Dispatch Create sends a notification to all subscribers.
 
 .. image:: _static/dispatch_create.png
