@@ -45,7 +45,7 @@ Email Confirmation
 ^^^^^^^^^^^^^^^^^^
 Once a Subscription Manager approves your request, you will received an
 email requiring you to confirm your request. This will come from 
-**Dispatch using Email** <no-reply@sns.amazonaws.com>. Click the included
+**Dispatch using Email** <no-reply\@sns.amazonaws.com>. Click the included
 link to complete your subscription.
 
 .. image:: _static/email_sub_pending.png
