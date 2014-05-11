@@ -32,6 +32,7 @@ Users
 ==============
 Most of your administrative tasks may be completed directly on Users List.
 From here:
+
 * Users may be activated and deactivated.
 * User subscriptions may be approved or denied
 
