@@ -74,6 +74,21 @@ $(document).ready(function() {
         }
     });
     // FOR THE ADMIN LIST VIEW end
+    
+    // FOR THE SUBSCRIBER DETAIL VIEW start
+    $('#reconfirmEmail').click(function () {
+        var btn = $(this);
+        if ( post_user_status_update(btn.data( "user" ), btn.data( "page" ), { action: "reconfirmEmail", email: btn.data("email") })  ){
+            btn.addClass("btn-default").removeClass("btn-warning");
+        }
+    });
+    $('#reconfirmSMS').click(function () {
+        var btn = $(this);
+        if ( post_user_status_update(btn.data( "user" ), btn.data( "page" ), { action: "reconfirmSMS", smsphone: btn.data("smsphone") }) ){
+            btn.addClass("btn-default").removeClass("btn-warning");
+        }
+    });
+    // FOR THE SUBSCRIBER DETAIL VIEW end
 
 })
 

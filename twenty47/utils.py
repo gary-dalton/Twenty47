@@ -79,12 +79,12 @@ def put_email_subscriber(email):
         sns_error.send(app, func='put_email_subscriber', e=e)
     return False
     
-def put_sms_subscribers(phone):
+def put_sms_subscriber(phone):
     try:
         result = conn.subscribe(SMS_TOPIC, 'sms', phone)
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
-        sns_error.send(app, func='put_sms_subscribers', e=e)
+        sns_error.send(app, func='put_sms_subscriber', e=e)
     return False
     
 def del_email_subscriber():
@@ -115,7 +115,7 @@ def put_sns_email_message(subject, template, **context):
         result = conn.publish(topic=EMAIL_TOPIC, message=message, subject=subject)
         #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
-        sns_error.send(app, func='put_sms_subscribers', e=e)
+        sns_error.send(app, func='put_sms_subscriber', e=e)
     return False
     
     

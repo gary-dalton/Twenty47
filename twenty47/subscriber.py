@@ -31,7 +31,7 @@ from flask.ext.mongoengine.wtf import model_form
 from flask.ext.security import login_required, roles_required, script
 from flask.ext.login import current_user
 from twenty47.models import Subscriber, User
-from twenty47 import app, subscription_pending, subscription_updated
+from twenty47 import app, debug, utils, subscription_pending, subscription_updated
 
 subscriber = Blueprint('subscriber', __name__, template_folder='templates')
 
@@ -114,6 +114,31 @@ class Detail(MethodView):
             
         return render_template('subscriber/detail.html', **context)
         
+class ResendConfirmation(MethodView):
+    decorators = [login_required]
+    
+    def post(self, id):        
+        user = User.objects.get_or_404(id=id)
+        debug("HERE")
+        
+        try:
+            if request.form['action'] == "reconfirmEmail":
+                if utils.put_email_subscriber(request.form['email']):
+                    return "True"
+                else:
+                    return(app.config['DISPATCH_ERROR_GENERAL'])
+            elif request.form['action'] == "reconfirmSMS":
+                if utils.put_sms_subscriber(request.form['smsphone']):
+                    return "True"
+                else:
+                    return(app.config['DISPATCH_ERROR_GENERAL'])
+                    
+        except KeyError, e:
+            return(app.config['DISPATCH_ERROR_GENERAL'])
+            
+            
+        
 subscriber.add_url_rule('/subscriber/', view_func=Detail.as_view('create'))
 subscriber.add_url_rule('/subscriber/', view_func=Detail.as_view('update'))
+subscriber.add_url_rule('/subscriber/resend/<id>', view_func=ResendConfirmation.as_view('resend'))
 #subscriber.add_url_rule('/subscriber/delete/<action>/<id>', view_func=Remove.as_view('delete'))
