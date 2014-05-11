@@ -7,9 +7,9 @@
         <ul class="nav nav-pills">
             <li class="active"><a href="{{ url_for('admin.index') }}">Admin</a></li>
             <li><a href="{{ url_for("admin.user_list") }}">List Users</a></li>
-            <li><a href="{{ url_for("admin_dispatch.create", action="IncidentType") }}">Add Incident Type</a></li>
-            <li><a href="{{ url_for("admin_dispatch.create", action="UnitsImpacted") }}">Add Units Impacted</a></li>
-            <li><a href="{{ url_for("admin_dispatch.create", action="AssistanceRequested") }}">Add Assistance Requested</a></li>
+            <li><a href="{{ url_for("admin.create", action="IncidentType") }}">Add Incident Type</a></li>
+            <li><a href="{{ url_for("admin.create", action="UnitsImpacted") }}">Add Units Impacted</a></li>
+            <li><a href="{{ url_for("admin.create", action="AssistanceRequested") }}">Add Assistance Requested</a></li>
             <li><a href="{{ url_for("admin.role_create") }}">Add Role</a></li>
         </ul>
     </div>

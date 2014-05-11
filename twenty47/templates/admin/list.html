@@ -18,8 +18,8 @@
                 <td>{{ type.shortCode }}</td>
                 <td>{{ type.order }}</td>
                 <td>
-                    <a href="{{ url_for("admin_dispatch.update", id=type.id, action="IncidentType") }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ url_for("admin_dispatch.delete", id=type.id, action="IncidentType") }}" class="btn btn-primary">Delete</a>
+                    <a href="{{ url_for("admin.update", id=type.id, action="IncidentType") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin.delete", id=type.id, action="IncidentType") }}" class="btn btn-primary">Delete</a>
                 </td>
             </tr>
             {% endfor %}
@@ -43,8 +43,8 @@
                 <td>{{ units.shortCode }}</td>
                 <td>{{ units.order }}</td>
                 <td>
-                    <a href="{{ url_for("admin_dispatch.update", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ url_for("admin_dispatch.delete", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Delete</a>
+                    <a href="{{ url_for("admin.update", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin.delete", id=units.id, action="UnitsImpacted") }}" class="btn btn-primary">Delete</a>
                 </td>
             </tr>
             {% endfor %}
@@ -68,8 +68,8 @@
                 <td>{{ assistance.shortCode }}</td>
                 <td>{{ assistance.order }}</td>
                 <td>
-                    <a href="{{ url_for("admin_dispatch.update", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ url_for("admin_dispatch.delete", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Delete</a>
+                    <a href="{{ url_for("admin.update", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for("admin.delete", id=assistance.id, action="AssistanceRequested") }}" class="btn btn-primary">Delete</a>
                 </td>
             </tr>
             {% endfor %}

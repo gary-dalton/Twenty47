@@ -9,12 +9,18 @@
       Edit Role
     {% endif %}
   </h2>
+  
+    <div class="alert alert-warning">
+        <strong>Warning!</strong> Editing the name of a role may break this application.
+        Adding a new role will not give you new capabilities. To work with roles, you
+        must change some of the application code.
+    </div>
 
   <form action="?{{ request.query_string }}" method="post">
     {{ forms.render(form) }}
     <div class="actions">
-      <input type="submit" class="btn primary" value="save">
-      <a href="{{ url_for("admin.index") }}" class="btn secondary">Cancel</a>
+      <input type="submit" class="btn btn-primary" value="save">
+      <a href="{{ url_for("admin.index") }}" class="btn btn-secondary">Cancel</a>
     </div>
   </form>
 {% endblock %}

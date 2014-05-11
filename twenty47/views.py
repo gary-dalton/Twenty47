@@ -34,7 +34,6 @@ from twenty47.forms import DispatchForm
 from twenty47 import db, app, debug, dispatch_created
 from flask.ext.login import current_user
 from flask.ext.security import login_required, roles_required, roles_accepted
-#, IncidentType, UnitsImpacted, AssistanceRequested
 
 
 dispatch = Blueprint('dispatch', __name__, template_folder = 'templates')

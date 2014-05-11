@@ -35,23 +35,6 @@ from twenty47 import app, debug, subscription_updated, sns_error
 from twenty47 import utils
 from itsdangerous import BadSignature
 
-
-
-
-class List(MethodView):
-    decorators = [login_required, roles_required('Admin')]
-    
-
-    def get(self):
-        incidenttypes = self.clsIncidentTypes.objects.all()
-        unitsimpacted = self.clsUnitsImpacted.objects.all()
-        assistancerequested = self.clsAssistanceRequested.objects.all()
-        return render_template('admin_dispatch/list.html', 
-                incidenttypes=incidenttypes, 
-                unitsimpacted=unitsimpacted,
-                assistancerequested=assistancerequested,
-                )
-
 admin = Blueprint('admin', __name__, template_folder='templates')
 
 class Pager(MethodView):
@@ -75,9 +58,9 @@ class List(MethodView):
 
     def get(self):
         roles = self.clsRole.objects.all()
-        incidenttypes = self.clsIncidentTypes.objects.all()
-        unitsimpacted = self.clsUnitsImpacted.objects.all()
-        assistancerequested = self.clsAssistanceRequested.objects.all()
+        incidenttypes = self.clsIncidentTypes.objects.all().order_by('order')
+        unitsimpacted = self.clsUnitsImpacted.objects.all().order_by('order')
+        assistancerequested = self.clsAssistanceRequested.objects.all().order_by('order')
         context = {
             "roles": roles,
             "incidenttypes": incidenttypes,
@@ -284,7 +267,7 @@ class RoleDetail(MethodView):
             else:
                 user_datastore.create_role(name=role.name, 
                     description=role.description)
-
+            flash("Role saved", 'success')
             return redirect(url_for('admin.index'))
         return render_template('admin/roledetail.html', **context)
         
@@ -330,7 +313,126 @@ class RemoteUserAdmin(MethodView):
             return redirect(url_for('dispatch.index'))        
         flash(user.firstName + " " + user.lastName + " " + completed_action, 'success')
         return redirect(url_for('dispatch.index'))
+
+
+class DetailFactory(MethodView):
+
+    decorators = [login_required, roles_required('Admin')]
+
+    def get_context(self, id=None, action=None):
+        if action == "IncidentType":
+            form_cls = model_form(IncidentType)
+            if id:
+                target = IncidentType.objects.get_or_404(id=id)
+                if request.method == 'POST':
+                    form = form_cls(request.form, inital=target._data)
+                else:
+                    form = form_cls(obj=target)
+            else:
+                target = IncidentType()
+                form = form_cls(request.form)
+        elif action == "UnitsImpacted":
+            form_cls = model_form(UnitsImpacted)
+            if id:
+                target = UnitsImpacted.objects.get_or_404(id=id)
+                if request.method == 'POST':
+                    form = form_cls(request.form, inital=target._data)
+                else:
+                    form = form_cls(obj=target)
+            else:
+                target = UnitsImpacted()
+                form = form_cls(request.form)
+        elif action == "AssistanceRequested":
+            form_cls = model_form(AssistanceRequested)
+            if id:
+                target = AssistanceRequested.objects.get_or_404(id=id)
+                if request.method == 'POST':
+                    form = form_cls(request.form, inital=target._data)
+                else:
+                    form = form_cls(obj=target)
+            else:
+                target = AssistanceRequested()
+                form = form_cls(request.form)
+
+        context = {
+            "action": action,
+            "target": target,
+            "form": form,
+            "create": id is None
+        }
+        return context
         
+                
+    def get(self, action, id):
+        context = self.get_context(id, action)
+        return render_template('admin/detail_factory.html', **context)
+
+    def post(self, id, action):        
+        context = self.get_context(id, action)
+        form = context.get('form')
+        
+        if form.validate():
+            target = context.get('target')
+            form.populate_obj(target)
+            target.save()
+            flash(target.name + " saved", 'success')
+            return redirect(url_for('admin.index'))
+        return render_template('admin/detail_factory.html', **context)
+
+
+class RemoveFactory(MethodView):
+    decorators = [login_required, roles_required('Admin')]
+    
+    def get_context(self, id=None, action=None):
+        if id:
+            if action == "IncidentType":
+                form_cls = model_form(IncidentType)
+                target = IncidentType.objects.get_or_404(id=id)
+                    
+            elif action == "UnitsImpacted":
+                form_cls = model_form(UnitsImpacted)
+                target = UnitsImpacted.objects.get_or_404(id=id)
+            
+            elif action == "AssistanceRequested":
+                form_cls = model_form(AssistanceRequested)
+                target = AssistanceRequested.objects.get_or_404(id=id)
+
+            else:
+                flash("Action failed, " + request.form['action'])
+                return redirect(url_for('admin.index'))
+                
+            if request.method == 'POST':
+                form = form_cls(request.form, inital=target._data)
+            else:
+                form = form_cls(obj=target)
+
+            context = {
+                "action": action,
+                "target": target,
+                "form": form,
+                "create": id is None
+            }
+            return context
+        
+        else:
+            flash("Action failed, " + request.form['action'], 'danger')
+            return redirect(url_for('admin.index'))
+
+    def get(self, id, action):
+        context = self.get_context(id, action)
+        return render_template('admin/remove_factory.html', **context)
+        
+    def post(self, id, action):        
+        context = self.get_context(id, action)
+        form = context.get('form')
+        
+        if form.validate():
+            target = context.get('target')
+            target.delete()
+            flash("Target deleted", 'success')
+
+
+        return redirect(url_for('admin.index'))
 
 def enable_subscription(user):
     '''
@@ -373,3 +475,6 @@ admin.add_url_rule('/admin/roleCreate/', defaults={'id': None}, view_func=RoleDe
 admin.add_url_rule('/admin/roleEdit/<id>/', view_func=RoleDetail.as_view('role_edit'))
 admin.add_url_rule('/admin/remove/<id>/<action>', view_func=Remove.as_view('remove'))
 admin.add_url_rule('/admin/remoteAdmin/<payload>', view_func=RemoteUserAdmin.as_view('remote_admin'))
+admin.add_url_rule('/admin/create/<action>', defaults={'id': None}, view_func=DetailFactory.as_view('create'))
+admin.add_url_rule('/admin/update/<action>/<id>', view_func=DetailFactory.as_view('update'))
+admin.add_url_rule('/admin/delete/<action>/<id>', view_func=RemoveFactory.as_view('delete'))
