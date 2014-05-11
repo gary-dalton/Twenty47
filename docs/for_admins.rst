@@ -1,5 +1,5 @@
 ################################
-User Documentation for Twenty47
+Admin Documentation for Twenty47
 ################################
 
 Contents:
@@ -20,8 +20,10 @@ the lower Admin button to access lists of the other backend items.
 
 The Others List
 
-.. image:: _static/admin_others_list.png
-   :alt: The Others List
++-------------------------------------------+
+| .. image:: _static/admin_others_list.png  |
+|   :alt: The Others List                   |
++-------------------------------------------+
 
 The Users List
 
