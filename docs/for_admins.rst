@@ -18,17 +18,20 @@ The Admin Section
 Click the Admin menu item to be taken direclty to the Users List. Click
 the lower Admin button to access lists of the other backend items.
 
-The Others List
+**The Others List**
 
 +-------------------------------------------+
 | .. image:: _static/admin_others_list.png  |
 |   :alt: The Others List                   |
 +-------------------------------------------+
 
-The Users List
+**The Users List**
 
-.. image:: _static/admin_users_list.png
-   :alt: The Users List
++-------------------------------------------+
+| .. image:: _static/admin_users_list.png   |
+|   :alt: The Users List                    |
++-------------------------------------------+
+
    
 Users
 ==============
