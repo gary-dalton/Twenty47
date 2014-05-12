@@ -6,6 +6,10 @@
 Welcome to Twenty47's documentation!
 ====================================
 
+Twenty47 is a small webapp to manage and provide notifications via 
+Amazon Web Services (AWS) Simple Notification Service (SNS) for 
+American Red Cross dispatches.
+
 Contents:
 
 .. toctree::
@@ -14,8 +18,9 @@ Contents:
 Documentation
 =============
 
-* For Users, :doc:for_users
-* For Developers
+* For Users, :doc:`for_users`
+* For Admins, :doc:`for_admin`
+* For Developers, :doc:`for_developers`
 
 
 Indices and tables
@@ -24,4 +29,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
