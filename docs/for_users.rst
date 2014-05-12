@@ -38,7 +38,7 @@ Effects of Subscriber form
 All subscribers must be approved before they are allowed to receive
 notifications. Once you submit your subscription request, a Subscription
 Manager receives an email notification of your request. The Subscription
-Manager must then approve your request. Once you request is approved, 
+Manager must then approve your request. Once your request is approved, 
 you will receive confirmation notices for your email or your SMS phone.
 
 Email Confirmation

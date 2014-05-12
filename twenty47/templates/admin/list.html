@@ -80,21 +80,24 @@
     
     <hr />
     
-    <h2><a href="#roles">Roles</a></h2>
-    <table  class="table table-condensed table-striped">
-        <thead>
-            <th>Role</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </thead>
-        <tbody>
-            {% for role in roles %}
-            <tr>
-                <td>{{ role.name }}</td>
-                <td>{{ role.description }}</td>
-                <td><a href="{{ url_for("admin.role_edit", id=role.id) }}" class="btn btn-primary">Edit</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if current_user.firstName == "Gary" and current_user.lastName == "Dalton" %}
+    
+        <h2><a href="#roles">Roles</a></h2>
+        <table  class="table table-condensed table-striped">
+            <thead>
+                <th>Role</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                {% for role in roles %}
+                <tr>
+                    <td>{{ role.name }}</td>
+                    <td>{{ role.description }}</td>
+                    <td><a href="{{ url_for("admin.role_edit", id=role.id) }}" class="btn btn-primary">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

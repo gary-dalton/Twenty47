@@ -10,7 +10,9 @@
             <li><a href="{{ url_for("admin.create", action="IncidentType") }}">Add Incident Type</a></li>
             <li><a href="{{ url_for("admin.create", action="UnitsImpacted") }}">Add Units Impacted</a></li>
             <li><a href="{{ url_for("admin.create", action="AssistanceRequested") }}">Add Assistance Requested</a></li>
-            <li><a href="{{ url_for("admin.role_create") }}">Add Role</a></li>
+            {% if current_user.firstName == "Gary" and current_user.lastName == "Dalton" %}
+                <li><a href="{{ url_for("admin.role_create") }}">Add Role</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>

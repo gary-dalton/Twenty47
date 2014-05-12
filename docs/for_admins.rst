@@ -16,13 +16,13 @@ provides access to user and subscriber administrative forms.
 The Admin Section
 =================
 Click the Admin menu item to be taken direclty to the Users List. Click
-the lower Admin button to access lists of the other backend items.
+the lower Admin button to access Dropdown Box Content List.
 
-**The Others List**
+**The Dropdown Box Content List**
 
 +-------------------------------------------+
 | .. image:: _static/admin_others_list.png  |
-|   :alt: The Others List                   |
+|   :alt: The Dropdown Box Content List                   |
 +-------------------------------------------+
 
 **The Users List**
@@ -53,18 +53,12 @@ Edit User form, you may select multiple roles for that user.
 * **User** - the only role with access to the Dispatch form
 * **Registered** - role which can log in and manage their own subscriptions
 
-The Others List
+The Dropdown Box Content List
 ===============
-These items on this list are used to fill the dropdown boxes on the
+The items on this list are used to fill the dropdown boxes on the
 Dispatch Form. Also, there is a list of Roles. The dropdown boxes may
 be edited and added to as needed and the forms will automatically be
 updated to your new values.
-
-Roles
------
-Caution should be exercised when editing roles. It is possible to lose
-access to the application if incorrect changes are made. It is advised
-to only make changes or add roles with cooperation of a developer.
 
 
 
