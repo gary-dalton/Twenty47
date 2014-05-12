@@ -37,7 +37,7 @@ subscriber = Blueprint('subscriber', __name__, template_folder='templates')
 
 class Detail(MethodView):
 
-    decorators = [login_required, roles_required('Registered')]
+    decorators = [login_required]
 
     def get_context(self):
         form_cls = model_form(Subscriber,field_args = {

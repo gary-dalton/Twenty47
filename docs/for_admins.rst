@@ -39,13 +39,13 @@ complete the following without Admin assistance:
 Admins are needed to:
 
 * Assign roles
-* Activate or deactivate User accounts
+* Activate or deactivate user accounts
 * Approve or deny subscription requests
-* Change a User's email address
+* Change a user's email address
 
 From the Users List, an Admin may:
 
-* Activated and deactivate users
+* Activate and deactivate users
 * Act upon user subscription requests
 * Delete a user
 * Select a user for editing
@@ -65,27 +65,27 @@ Manager
 SubMan
  Role which receives emailed notifications of pending subscriptions
 
-User
+Dispatch
  The only role with access to the Dispatch form
 
 Registered
  Role which can log in and manage their own subscriptions
 
-The roles of User and Registered may be automatically applied using emailed
-links. The roles of Admin, Manager, and SubMan must be applied by an
-Admin via the Admin UI.
+The roles of Dispatch and Registered may be automatically applied using
+emailed links. The roles of Admin, Manager, and SubMan must be applied by
+an Admin via the Admin UI.
 
 User Accounts
 --------------
 Once an account is confirmed, it is automatically activated. This permits
-the User to immediately make a subscription request. An activated user
+the user to immediately make a subscription request. An activated user
 does not have permissions to create a Dispatch. The account confirmation
 triggers an email to Managers for further action. The Manager may click
-a link to give the account the role of User. Those with the role of User,
-may create a Dispatch.
+a link to give the account the role of Dispatch. Those with the role of
+Dispatch, may create a Dispatch.
 
 All accounts which are active may login to the system. In order to prevent
-an account from logging in, Deactivate that account. Deactivation may
+an account from logging in, deactivate that account. Deactivation may
 also be performed via emailed link.
 
 Subscription Requests
@@ -96,20 +96,20 @@ subscription status and allow you to select a different status. The
 status levels are:
 
 None
- The User has not requested nor submitted a subscription request
+ The User has not requested nor submitted a subscription request.
  
 Denied
  The User has requested a subscription and it has been denied. No futher
  subscription requests may be made by the User.
  
 Pending
- The User has requested a subsciption and that request is awaiting
- administrative action. That action my be completed via emailed link of
+ The user has requested a subsciption and that request is awaiting
+ administrative action. That action may be completed via emailed link or
  via the Users List.
  
-Approve
- The User's request for a subscription has been approved. Additional
- requests from the User or changes submitted by that User are considered
+Approved
+ The user's request for a subscription has been approved. Additional
+ requests from the user or changes submitted by that user are considered
  approved.
 
 The Dropdown Box Content List
@@ -136,7 +136,7 @@ administration.
 ======================  ============================    ====================
  Trigger                 Twenty47 Action                 Response via link
 ======================  ============================    ====================
-User confirmed          Send email to Managers          * Set as User
+User confirmed          Send email to Managers          * Set as Dispatch
                                                         * Set as Registered
                                                         * Deactivate
 Subscription requested  Send email to SubMans           * Approve

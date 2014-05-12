@@ -56,7 +56,7 @@ class Home(MethodView):
         return next_url
         
 class DispatchCreate(MethodView):
-    decorators = [login_required, roles_accepted('User', 'Admin')]
+    decorators = [login_required, roles_required('Dispatch')]
     
     def get_context(self, id=None):
 
