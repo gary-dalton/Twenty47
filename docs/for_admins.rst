@@ -55,7 +55,7 @@ Edit User form, you may select multiple roles for that user.
 * **User** - the only role with access to the Dispatch form
 * **Registered** - role which can log in and manage their own subscriptions
 
-The roles of User and Registered my be automatically applied using emailed
+The roles of User and Registered may be automatically applied using emailed
 links. The roles of Admin, Manager, and SubMan must be applied by an
 Admin via the Admin UI.
 
@@ -68,13 +68,12 @@ and the forms will automatically be updated to your new values.
 Triggers
 ========
 A trigger is an action taken by a user that triggers a separate action
-by Twenty47. There are three triggers, two of which are important for
+by Twenty47. There are many triggers, two of which are important for
 administration.
 
 ======================  ============================    ====================
  Trigger                 Twenty47 Action                 Response via link
 ======================  ============================    ====================
-Dispatch created        Send dispatch notifications     None
 User confirmed          Send email to Managers          * Set as User
                                                         * Set as Registered
                                                         * Deactivate
@@ -82,19 +81,34 @@ Subscription requested  Send email to SubMans           * Approve
                                                         * Deny
 ======================  ============================    ====================
 
+The administrative triggers will send emails which include action links.
+The action links may be clicked on to complete that action. No login or
+additional thought is needed.
 
 
 
-
-The Subscriber form
+Subscriptions
 ===================
-This form is also self-explanatory. What happens after pressing "Save" 
-does, however; require more explanation. Also before selecting "SMS
-Phone", make certain you have a phone capable of receiving SMS text
-messages and you are aware of any fees your service provider might charge.
+Administrative control over subscriptions is done entirely from the
+Users List. There are four buttons which indicate the current subscription
+status and allow you to select a different status. The status levels are:
 
-.. image:: _static/subscriber.png
-   :alt: Manage your subscription form
+None
+ The User has not requested nor submitted a subscription request
+ 
+Denied
+ The User has requested a subscription and it has been denied. No futher
+ subscription requests may be made by the User.
+ 
+Pending
+ The User has requested a subsciption and that request is awaiting
+ administrative action. That action my be completed via emailed link of
+ via the Users List.
+ 
+Approve
+ The User's request for a subscription has been approved. Additional
+ requests from the User or changes submitted by that User are considered
+ approved.
    
 
 Effects of Subscriber form
