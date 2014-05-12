@@ -26,8 +26,8 @@ Click the Admin menu item to be taken directly to the Users List.
  
 Users
 ==============
-Administrative tasks on Users are intened to be minimal. Most Users should
-be self-sufficient once receiving their initial roles. User are able to
+Administrative tasks on users are intended to be minimal. Most users should
+be self-sufficient once receiving their initial roles. Users are able to
 complete the following without Admin assistance:
 
 * Register for an account
@@ -53,7 +53,7 @@ From the Users List, an Admin may:
 Roles
 -----
 Users must be assigned roles, mostly, this is done via the emailed links.
-If you wish to change roles for a user, click edit for that user. On the
+If you wish to change roles for a user, click Edit for that user. On the
 Edit User form, you may select multiple roles for that user.
 
 Admin
@@ -63,7 +63,7 @@ Manager
  Role which receives emailed notifications of new users
  
 SubMan
- Role which receives emailed notification of pending subscriptions
+ Role which receives emailed notifications of pending subscriptions
 
 User
  The only role with access to the Dispatch form
@@ -144,11 +144,8 @@ Subscription requested  Send email to SubMans           * Approve
 ======================  ============================    ====================
 
 The administrative triggers will send emails which include action links.
-The action links may be clicked on to complete that action. No login or
-additional thought is needed.
-
-
-
+The action links may be clicked on to complete that action without
+requiring a login.
 
    
 
