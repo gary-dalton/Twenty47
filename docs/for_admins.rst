@@ -15,21 +15,21 @@ provides access to user and subscriber administrative forms.
 
 The Admin Section
 =================
-Click the Admin menu item to be taken direclty to the Users List. Click
+Click the Admin menu item to be taken directly to the Users List. Click
 the lower Admin button to access Dropdown Box Content List.
-
-**The Dropdown Box Content List**
-
-+-------------------------------------------+
-| .. image:: _static/admin_others_list.png  |
-|   :alt: The Dropdown Box Content List     |
-+-------------------------------------------+
 
 **The Users List**
 
 +-------------------------------------------+
 | .. image:: _static/admin_users_list.png   |
 |   :alt: The Users List                    |
++-------------------------------------------+
+
+**The Dropdown Box Content List**
+
++-------------------------------------------+
+| .. image:: _static/admin_others_list.png  |
+|   :alt: The Dropdown Box Content List     |
 +-------------------------------------------+
 
    
@@ -40,6 +40,8 @@ From here:
 
 * Users may be activated and deactivated.
 * User subscriptions may be approved or denied
+* Users may be deleted
+* Users may be selected for editing
 
 Roles
 -----
@@ -53,12 +55,30 @@ Edit User form, you may select multiple roles for that user.
 * **User** - the only role with access to the Dispatch form
 * **Registered** - role which can log in and manage their own subscriptions
 
+The roles of User and Registered my be automatically applied using emailed
+links. The roles of Admin, Manager, and SubMan must be applied by an
+Admin via the Admin UI.
+
 The Dropdown Box Content List
-===============
+=============================
 The items on this list are used to fill the dropdown boxes on the
-Dispatch Form. Also, there is a list of Roles. The dropdown boxes may
-be edited and added to as needed and the forms will automatically be
-updated to your new values.
+Dispatch Form. The dropdown boxes may be edited and added to as needed
+and the forms will automatically be updated to your new values.
+
+Triggers
+========
+A trigger is an action taken by a user that triggers a separate action
+by Twenty47. There are three triggers, two of which are important for
+administration.
+
+=========               =================
+ Trigger                 Twenty47 Action 
+=========               =================
+Dispatch created        Send dispatch notifications
+User confirmed          Send email to Managers
+Subscription requested  Send email to SubMans
+======================  ============================
+
 
 
 
