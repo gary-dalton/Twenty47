@@ -71,13 +71,22 @@ A trigger is an action taken by a user that triggers a separate action
 by Twenty47. There are three triggers, two of which are important for
 administration.
 
-=========               =================
+======================  ============================
  Trigger                 Twenty47 Action 
-=========               =================
+======================  ============================
 Dispatch created        Send dispatch notifications
 User confirmed          Send email to Managers
 Subscription requested  Send email to SubMans
 ======================  ============================
+
+=====  =====  ======
+   Inputs     Output
+------------  ------
+  A      B    A or B
+=====  =====  ======
+False  False  False
+True   False  True
+=====  =====  ======
 
 
 
