@@ -13,7 +13,12 @@ Some setup is required:
     
 Documentation
 -------------
-- For Users, :doc:docs/for_users
+- For Users, 
+
+:doc:docs/for_users
+
+:doc:`docs/for_users`
+
 - For Developers
 
 Features

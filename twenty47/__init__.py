@@ -13,7 +13,7 @@ app.config.from_pyfile('local.config.py')
 app.config.update(dict(
 	DEBUG=True,
 ))
-app.config.from_envvar('fllconfig', silent=True)
+app.config.from_envvar('config', silent=True)
 
 db = MongoEngine(app)
 mail = Mail(app)
