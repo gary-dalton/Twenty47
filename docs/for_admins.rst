@@ -22,7 +22,7 @@ the lower Admin button to access Dropdown Box Content List.
 
 +-------------------------------------------+
 | .. image:: _static/admin_others_list.png  |
-|   :alt: The Dropdown Box Content List                   |
+|   :alt: The Dropdown Box Content List     |
 +-------------------------------------------+
 
 **The Users List**
