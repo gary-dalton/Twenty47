@@ -49,9 +49,9 @@ class Home(MethodView):
     def redirector(self):
         next_url = url_for('subscriber.create')
         for role in current_user.roles:
-            if role.name == 'Admin':
-                next_url = url_for('dispatch.dispatch_create')
-            if role.name == 'User':
+            #if role.name == 'Admin':
+             #   next_url = url_for('dispatch.dispatch_create')
+            if role.name == 'Dispatch':
                 next_url = url_for('dispatch.dispatch_create')
         return next_url
         
