@@ -85,10 +85,40 @@ The administrative triggers will send emails which include action links.
 The action links may be clicked on to complete that action. No login or
 additional thought is needed.
 
+Users
+=====
+Administrative tasks on Users are intened to be minimal. Most Users should
+be self-sufficient once receiving their initial roles. User are able to
+complete the following without Admin assistance:
 
+* Register for an account
+* Confirm their registration
+* Change their password
+* Reset a lost password
+* Manage their subscriptions
 
-Subscriptions
-===================
+Admins are needed to:
+
+* Assign roles
+* Activate or deactivate User accounts
+* Approve or deny subscription requests
+* Change a User's email address
+
+User Accounts
+--------------
+Once an account is confirmed, it is automatically activated. This permits
+the User to immediately make a subscription request. An activated user
+does not have permissions to create a Dispatch. The account confirmation
+triggers an email to Managers for further action. The Manager may click
+a link to give the account the role of User. Those with the role of User,
+may create a Dispatch.
+
+All accounts which are active may login to the system. In order to prevent
+an account from logging in, Deactivate that account. Deactivation may
+also be performed via emailed link.
+
+Subscription Requests
+---------------------
 Administrative control over subscriptions is done entirely from the
 Users List. There are four buttons which indicate the current subscription
 status and allow you to select a different status. The status levels are:
@@ -111,28 +141,6 @@ Approve
  approved.
    
 
-Effects of Subscriber form
---------------------------
-All subscribers must be approved before they are allowed to receive
-notifications. Once you submit your subscription request, a Subscription
-Manager receives an email notification of your request. The Subscription
-Manager must then approve your request. Once you request is approved, 
-you will receive confirmation notices for your email or your SMS phone.
-
-Email Confirmation
-^^^^^^^^^^^^^^^^^^
-Once a Subscription Manager approves your request, you will received an
-email requiring you to confirm your request. This will come from 
-**Dispatch using Email** <no-reply\@sns.amazonaws.com>. Click the included
-link to complete your subscription.
-
-.. image:: _static/email_sub_pending.png
-   :alt: Emailed confirmation request
-
-Once you have confirmed, you will be directed to a page similar to this:
-   
-.. image:: _static/email_sub_confirm.png
-   :alt: Your email is confirmed
 
 
 
