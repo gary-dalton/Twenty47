@@ -40,6 +40,16 @@ Ubuntu 14.01 AMI with the ID of ami-358c955c.
 Follow whatever settings you want with this. Just make certain that on the
 "Configure Instance Details" tab, you select the IAM Role you just created.
 
+Email Settings
+==============
+You do want to send out email. Since you already have an AWS account,
+you can easily add Simple Email Services (SES). To set up SES, follow
+`What Is Amazon SES? <http://docs.aws.amazon.com/ses/latest/DeveloperGuide/Welcome.html/>`_
+
+Of course using SES is optional, what is needed is an SMTP server and the
+proper credentials to send email through that server.
+
+
 Meet the Requirements
 =====================
 Now let's make all needed software and packages available on the server.
@@ -55,7 +65,9 @@ of these packages.
     
     apt-get update
     
-    apt-get install apache2 libapache2-mod-wsgi python-virtualenv python-dev
+    apt-get install apache2 libapache2-mod-wsgi python-virtualenv
+    
+    apt-get install git python-dev
     
 MongoDB
 --------
@@ -88,8 +100,8 @@ Next, create a userAdminAnyDatabase role
 Create Twenty47 Database
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Now we create a database for Twenty47 and add an authorized user to it.
-Use any names you wish for these as the initialization script will request
-your information.
+Use any names you wish for these and they will be used to configure
+Twenty47.
 
     use admin
     
@@ -146,16 +158,27 @@ for more help.
 Now, let's create your topics. Choose relatively short names for these,
 especially for your SMS topic.
 
-    conn.create_topic('dispatch_email')
-    conn.create_topic('dispatch)
+    conn.create_topic('dispatch_email')     #for email
+    
+    conn.create_topic('dispatch)            #for SMS
     
 Each of these commands should return a CreateTopicResult which looks
 similar to *arn:aws:sns:us-zone-1:700000000000:del_test*. Make a note
-of these strings as you will need them when we initialize the application.
+of these strings as you will need them when we configure Twenty47.
+
+Git Twenty47
+------------
+Now lets get the Twenty47 code onto your server. Make certain you are
+in the directory you wish to install to, then
+
+    git clone 'https://github.com/gary-dalton/Twenty47.git'
+    
+Preparing Apache2
+-----------------
     
     
 
-
+`Flask-Mail <http://pythonhosted.org/flask-mail/>`_
 
 
 
