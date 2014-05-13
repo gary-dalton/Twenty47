@@ -6,21 +6,50 @@
 Welcome to Twenty47's documentation!
 ====================================
 
-Twenty47 is a small webapp to manage and provide notifications via 
-Amazon Web Services (AWS) Simple Notification Service (SNS) for 
-American Red Cross dispatches.
-
 Contents:
 
 .. toctree::
    :maxdepth: 2
+   
+   for_users
+   for_admins
+   for_developers
+   requirements
+   installation
 
-Documentation
+Introduction
 =============
+Twenty47 is a small webapp to manage and provide notifications via 
+Amazon Web Services (AWS) Simple Notification Service (SNS) for 
+American Red Cross dispatches.
 
-* For Users, :doc:`for_users`
-* For Admins, :doc:`for_admin`
-* For Developers, :doc:`for_developers`
+This documentation is divided into 3 main categories. This should make
+it easier to only find the information needed for your level of use.
+Documentation exists specifically for:
+
+* Users, :ref:`for_users`
+* Admins, :ref:`for_admin`
+* Developers, :ref:`for_developers`
+
+Requirements
+============
+The main requirements are:
+
+* Web server
+* Python
+* Flask
+* Flask-Security
+* Mongdb
+* Flask-Mongoengine
+* py-boto
+* Amazon Web Services
+
+These requirements are given in more detail in :ref:`requirements`.
+
+Installation
+============
+Once the requirements are met, the Twenty47 application may be installed
+on the server. See installation for more details, :ref:`installation`.
 
 
 Indices and tables
