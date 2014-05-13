@@ -44,15 +44,18 @@ Meet the Requirements
 =====================
 Now let's make all needed software and packages available on the server.
 Log into a secure shell on your server. All of the package updates require
-root access so I
+root access so once I am logged in.
+
     sudo -i
-once I am logged in.
 
 Basic Packages
 --------------
-    apt-get install apache2
-    apt-get install libapache2-mod-wsgi
-    apt-get install python-virtualenv
+These are just to get us started. Later, we'll do a more complete setup
+of these packages.
+    
+    apt-get update
+    
+    apt-get install apache2 libapache2-mod-wsgi python-virtualenv python-dev
     
 MongoDB
 --------
@@ -79,9 +82,8 @@ Edit the /etc/mongodb.conf file to enable auth. (set auth = true)
 Next, create a userAdminAnyDatabase role
 
     use admin   # use the admin db
-    db.createUser( {user: "siteUserAdmin", pwd: "password",
-      roles:[{role: "userAdminAnyDatabase", db: "admin"}]
-      })
+    
+    db.createUser({user:"siteUserAdmin", pwd:"password", roles:[{role: "userAdminAnyDatabase", db: "admin"}]})
       
 Create Twenty47 Database
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -90,13 +92,67 @@ Use any names you wish for these as the initialization script will request
 your information.
 
     use admin
+    
     db.auth({ user: "siteUserAdmin", pwd: "password"})
+    
     use twenty47
+    
     db.createUser( {user: "twenty47", pwd: "password", roles:["dbOwner"]})
     
+Virtualenv
+----------
+I prefer to use Python virtualenv to reduce problems with versions and
+dependencies. See `vitualenv <https://virtualenv.pypa.io/en/latest/virtualenv.html/>`_.
+
+Change to the directory you wish to install Twenty47.
+
+    mkdir -p /srv/www/twenty47
+
+    cd /srv/www/twenty47
     
-* Create an Admin account
-* Create an Admin account
+Make the virtualenv and start using it.
+
+    vitualenv venv
+    
+    . venv/bin/activate
+    
+Now let's start installing packages into our virtualenv.
+
+    pip install Flask flask-bcrypt flask-mongoengine flask-security
+    
+    pip install boto
+    
+Amazon SNS
+-------------
+Assuming you have properly started your EC2 instance with an IAM role, the
+following comands will allow you to create your subscription topics.
+
+    python
+    
+    from boto import sns
+    
+    conn = sns.SNSConnection()
+    
+    conn.get_all_topics()
+    
+If you receive any errors here, it means one or more of the following:
+
+* The EC2 instance is not associated with an IAM role
+* boto is not able to find your credentials
+
+See `Troubleshooting Connections <http://docs.pythonboto.org/en/latest/getting_started.html#troubleshooting-connections/>`_
+for more help.
+
+Now, let's create your topics. Choose relatively short names for these,
+especially for your SMS topic.
+
+    conn.create_topic('dispatch_email')
+    conn.create_topic('dispatch)
+    
+Each of these commands should return a CreateTopicResult which looks
+similar to *arn:aws:sns:us-zone-1:700000000000:del_test*. Make a note
+of these strings as you will need them when we initialize the application.
+    
     
 
 
