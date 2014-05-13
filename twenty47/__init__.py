@@ -29,7 +29,11 @@ subscription_pending = twenty47_signals.signal("subscription-pending")
 sns_error = twenty47_signals.signal("sns-error")
 dispatch_created = twenty47_signals.signal("dispatch-created")
 
-debug = flash
+if app.config['DEBUG']:
+    debug = flash
+else:
+    def debug(*args):
+        pass
 
 def register_blueprints(app):
     # Prevents circular imports
