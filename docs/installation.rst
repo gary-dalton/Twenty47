@@ -160,11 +160,19 @@ especially for your SMS topic.
 
     conn.create_topic('dispatch_email')     #for email
     
-    conn.create_topic('dispatch)            #for SMS
+    conn.create_topic('dispatch_sms)        #for SMS
     
 Each of these commands should return a CreateTopicResult which looks
 similar to *arn:aws:sns:us-zone-1:700000000000:del_test*. Make a note
 of these strings as you will need them when we configure Twenty47.
+
+Since SMS uses either the topic name or the topic attribute *DisplayName*
+as part of the SMS message, I recommend setting a very short DisplayName.
+
+    topic = *arn:aws:sns:us-zone-1:700000000000:del_test* (your topic string)
+    
+    conn.set_topic_attributes(topic, 'DisplayName', 'DSPH')
+    
 
 Git Twenty47
 ------------
@@ -173,6 +181,29 @@ in the directory you wish to install to, then
 
     git clone 'https://github.com/gary-dalton/Twenty47.git'
     
+Configuration and Initialization
+================================
+Only a few more steps to complete before Twenty47 is ready to handle
+your dispatches.
+
+The Config File
+---------------
+Open the config file, located at Twenty47/twenty47/config.py, for editing.
+Here you will be able to all of the included Flask extensions that are
+installed. Please see the documentation of each extension for a full list
+of possible configuration settings.
+
+Flask-Mail
+    http://pythonhosted.org/flask-mail/
+    
+Flask-Security
+    https://pythonhosted.org/Flask-Security/configuration.html
+    
+In the config file, a number of settings are marked *Change these*. Please
+do review those and change them to match your circumstances.
+
+
+
 Preparing Apache2
 -----------------
     

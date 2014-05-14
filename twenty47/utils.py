@@ -33,13 +33,9 @@ from boto import sns
 from twenty47.models import User, Role
 from itsdangerous import URLSafeSerializer, BadSignature
 
-
-
 mail = Mail(app)
 conn = sns.SNSConnection()
-EMAIL_TOPIC = 'arn:aws:sns:us-east-1:796928799269:Dispatch_Email'
-#EMAIL_TOPIC = 'arn:aws:sns:us-east-1:796928799269'
-SMS_TOPIC = 'arn:aws:sns:us-east-1:796928799269:Dispatch_SMS'
+
 
 def get_all_subscribers():
     get_email_subscribers()
@@ -51,7 +47,7 @@ def get_email_subscribers():
     Returns the subscribers email address and the ARN
     '''
     try:
-        subscribers_obj = conn.get_all_subscriptions_by_topic(EMAIL_TOPIC)
+        subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_EMAIL_TOPIC'])
         subscribers = dict()
         for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
             debug('Email Subscriber %s has the ARN of %s.' % (subscriber['Endpoint'], subscriber['SubscriptionArn']))
@@ -62,7 +58,7 @@ def get_email_subscribers():
         
 def get_sms_subscribers():
     try:
-        subscribers_obj = conn.get_all_subscriptions_by_topic(SMS_TOPIC)
+        subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_SMS_TOPIC'])
         subscribers = dict()
         for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
             subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
@@ -73,7 +69,7 @@ def get_sms_subscribers():
 
 def put_email_subscriber(email):
     try:
-        result = conn.subscribe(EMAIL_TOPIC, 'email', email)
+        result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email)
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_email_subscriber', e=e)
@@ -81,7 +77,7 @@ def put_email_subscriber(email):
     
 def put_sms_subscriber(phone):
     try:
-        result = conn.subscribe(SMS_TOPIC, 'sms', phone)
+        result = conn.subscribe(DISPATCH_SMS_TOPIC, 'sms', phone)
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_sms_subscriber', e=e)
@@ -89,7 +85,7 @@ def put_sms_subscriber(phone):
     
 def del_email_subscriber():
     try:
-        result = conn.subscribe(EMAIL_TOPIC, 'email', email)
+        result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email)
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_email_subscriber', e=e)
@@ -112,7 +108,7 @@ def put_sns_email_message(subject, template, **context):
     message = render_template('%s/%s.txt' % ctx, **context)
     
     try:
-        result = conn.publish(topic=EMAIL_TOPIC, message=message, subject=subject)
+        result = conn.publish(topic=app.config['DISPATCH_EMAIL_TOPIC'], message=message, subject=subject)
         #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_sms_subscriber', e=e)
