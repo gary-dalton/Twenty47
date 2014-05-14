@@ -88,8 +88,6 @@ class Detail(MethodView):
         del form_cls.last_login_ip
         del form_cls.current_login_ip
         del form_cls.login_count
-        #del form_cls.roles
-        #del form_cls.password
         del form_cls.subscription
         
 
@@ -203,7 +201,7 @@ class Remove(MethodView):
             return context
                 
         else:
-            flash("Action failed, " + request.form['action'])
+            flash("Action failed, " + request.form['action'], 'danger')
             return redirect(url_for('admin.index'))
             
     def get(self, id, action):
@@ -398,7 +396,7 @@ class RemoveFactory(MethodView):
                 target = AssistanceRequested.objects.get_or_404(id=id)
 
             else:
-                flash("Action failed, " + request.form['action'])
+                flash("Action failed, " + request.form['action'], 'danger')
                 return redirect(url_for('admin.index'))
                 
             if request.method == 'POST':

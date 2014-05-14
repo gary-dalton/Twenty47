@@ -1,6 +1,9 @@
 A new Dispatch was performed. Here are some details:
 
-TIME
+INCIDENT TIME
+{{ dispatch.incidentTime }}
+
+DISPATCH TIME
 {{ dispatch.incidentTime }}
 
 ADDRESS

@@ -94,9 +94,17 @@ def del_email_subscriber():
 def del_sms_subscribers():
     pass
     
-def put_sns_sms_message():
-    # max length is 160 characters
-    pass
+def put_sns_sms_message(message):
+    """Send an SMS via the Amazon SNS.
+
+    :param message: Plain text message, max length is 160 characters
+    """
+    try:
+        result = conn.publish(topic=app.config['DISPATCH_SMS_TOPIC'], message=message)
+        #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+    except Exception, e:
+        sns_error.send(app, func='put_sns_sms_message', e=e)
+    return False
     
 def put_sns_email_message(subject, template, **context):
     """Send an email via the Amazon SNS.
@@ -111,9 +119,8 @@ def put_sns_email_message(subject, template, **context):
         result = conn.publish(topic=app.config['DISPATCH_EMAIL_TOPIC'], message=message, subject=subject)
         #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
-        sns_error.send(app, func='put_sms_subscriber', e=e)
+        sns_error.send(app, func='put_sns_email_message', e=e)
     return False
-    
 
     
 def update_user_subscriptions():
@@ -223,7 +230,3 @@ def get_users_with_role(role_name=None, list_of=None):
         for user in users:
             the_list.append(user[list_of])
     return the_list
-
-    
-    
-        

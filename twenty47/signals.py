@@ -76,6 +76,19 @@ def when_user_confirmed(sender, user):
     
 @dispatch_created.connect_via(app)
 def when_dispatch_created(sender, dispatch):
+    delta = dispatch.dispatchTime - dispatch.incidentTime
+    smsmsg = dispatch.dispatchTime.strftime('%d/%m %H:%M ') + \
+            dispatch.county.upper() + ", " + \
+            dispatch.city +  " (" + \
+            dispatch.streetAddress + ") " + \
+            dispatch.incidentType.split("::")[0] + " " + \
+            dispatch.unitsImpacted.split("::")[0] + " " + \
+            dispatch.assistanceRequested.split("::")[0] + " - " + \
+            dispatch.responderName + " " + \
+            dispatch.responderPhone + " - " + \
+            str(delta.days*24 + delta.seconds//3600) + "h"
+    flash(smsmsg, 'success')
+    
     splitter = dispatch.incidentType.split("::")
     dispatch.incidentType = splitter[1]
     splitter = dispatch.unitsImpacted.split("::")
@@ -87,6 +100,6 @@ def when_dispatch_created(sender, dispatch):
             "dispatch": dispatch,
         }
     utils.put_sns_email_message('New Dispatch', 'dispatch_created', **context)
-    utils.send_mail('New Dispatch', ['gary@gruffgoat.com'], 'dispatch_created', **context)
+    utils.put_sns_sms_message(smsmsg)
 
 
