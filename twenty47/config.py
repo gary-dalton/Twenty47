@@ -34,6 +34,7 @@ DEFAULT_MAIL_SENDER = 'email_sender@yourbiz.com'
 # Settings for Twenty47
 DISPATCH_ERROR_GENERAL = "Encountered a problem. Please try again. If this error persists, please contact your administrator."
 DISPATCH_ERROR_REMOTEADMIN = "Remote administration failed. Please login to complete your request."
+DISPATCH_MAX_TOKEN_AGE = 432000
 # Change these
 DISPATCH_EMAIL_TOPIC = 'arn:aws:sns:us-zone-1:3456345645756756:Dispatch_Email'
 DISPATCH_SMS_TOPIC = 'arn:aws:sns:us-zone-1:3456345645756756:Dispatch_SMS'

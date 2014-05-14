@@ -31,7 +31,7 @@ from flask import render_template, flash, abort, redirect, url_for
 from flask.ext.mail import Mail
 from boto import sns
 from twenty47.models import User, Role
-from itsdangerous import URLSafeSerializer, BadSignature
+from itsdangerous import URLSafeTimedSerializer, BadSignature
 
 mail = Mail(app)
 conn = sns.SNSConnection()
@@ -113,10 +113,6 @@ def put_sns_email_message(subject, template, **context):
     except Exception, e:
         sns_error.send(app, func='put_sms_subscriber', e=e)
     return False
-    
-    
-    
-
     
 
     
@@ -203,9 +199,10 @@ def send_mail(subject, recipients, template, **context):
 
 def get_serializer(secret_key=None):
     if secret_key is None:
-        #secret_key = app.secret_key
         secret_key = "secret"
-    return URLSafeSerializer(secret_key)
+        secret_key = app.config['SECRET_KEY']
+    return URLSafeTimedSerializer(secret_key)
+    
     
 def get_activation_link(user_id, action):
     s = get_serializer()

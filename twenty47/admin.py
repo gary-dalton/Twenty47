@@ -277,7 +277,7 @@ class RemoteUserAdmin(MethodView):
     def get(self, payload):
         s = utils.get_serializer()
         try:
-            paystr = s.loads(payload)
+            paystr = s.loads(payload, max_age= app.config['DISPATCH_MAX_TOKEN_AGE'])
             listload =paystr.split(',')
             user_id = listload[0]
             action = listload[1]
