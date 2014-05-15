@@ -5,15 +5,11 @@ from flask_mail import Mail
 import blinker
 
 app = Flask(__name__)
-app.config.from_object(__name__)
+#app.config.from_object(__name__)
 
 # Load the config
-app.config.from_pyfile('local.config.py')
-
-app.config.update(dict(
-	DEBUG=True,
-))
-app.config.from_envvar('config', silent=True)
+app.config.from_pyfile('testconfig.py')
+#app.config.from_envvar('config', silent=True)
 
 db = MongoEngine(app)
 mail = Mail(app)

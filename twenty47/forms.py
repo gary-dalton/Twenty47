@@ -27,14 +27,13 @@ FLL handles all needed online forms, etc for FIRST Lego League
 """
 from flask_wtf import Form
 from wtforms import BooleanField, StringField, HiddenField, \
-    DateTimeField, SelectField, TextAreaField
-from wtforms.validators import Length, InputRequired
+    DateTimeField, SelectField, TextAreaField, PasswordField
+from wtforms.validators import Length, InputRequired, Email
 from flask.ext.login import current_user
 import datetime
 
 
 class DispatchForm(Form):
-    #default_operator = current_user.firstName + " " + current_user.lastName
     
     operator = HiddenField('Operator',[Length(max=200), InputRequired()], default='operator')
     incidentTime = DateTimeField('Incident Date and Time', [InputRequired()], default=datetime.datetime.now())
@@ -51,9 +50,11 @@ class DispatchForm(Form):
     responderName = StringField('First Name of DAT Member/DPM Dispatched', [Length(max=200)])
     responderPhone = StringField('Phone Number of DAT Member/DPM Dispatched', [Length(max=100)])
 
-    #operator = HiddenField(default=current_user.firstName + " " + current_user.lastName)
-    '''
-        incidentType = SelectField('Incident Type', [Length(max=100)])
-    unitsImpacted = SelectField('Housing Units Impacted', [Length(max=100)])
-    assistanceRequested = SelectField('Type of Assistance Requested', [Length(max=100)])
-    '''
+
+class InstallForm(Form):
+    firstName = StringField('First Name',[Length(max=200), InputRequired()], default='Admin')
+    lastName = StringField('Last Name', [Length(max=200), InputRequired()], default='Admin')
+    email = StringField('Email Address', [Length(max=200), Email(), InputRequired()])
+    password = PasswordField('Password', [Length(max=255), InputRequired()])
+    passwordagain = PasswordField('Verify Password', [Length(max=255), InputRequired()])
+
