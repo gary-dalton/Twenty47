@@ -1,17 +1,60 @@
 {% extends "base.html" %}
-{% import "_forms.html" as forms %}
 
 {% block content %}
 
-
     <h2>First Time Installation of Twenty47</h2>
-    <form action="?{{ request.query_string }}" method="post">
-        {{ forms.render(form) }}
-        <div class="actions">
-            <input type="submit" class="btn primary" value="save">
-            <a href="/" class="btn secondary">Cancel</a>
-        </div>
-    </form>
+    {% if not all_ok %}    
+    
+        <h3>There are some issues with your config.py</h3>
+        <p>Please review this list and make any needed edits in your config.py</p>
+        {% if broken|length != 0 %}
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3>Broken</h3>
+                    <ul>
+                        {% for bad_config in broken %}
+                            <li>{{ bad_config }} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if dangerous|length != 0 %} 
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3>Dangerous</h3>
+                    <ul>
+                        {% for bad_config in dangerous %}
+                            <li>{{ bad_config }} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if ok|length != 0 %} 
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3>Seems OK</h3>
+                    <ul>
+                        {% for bad_config in ok %}
+                            <li>{{ bad_config }} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        
+    {% else %}
+        <h3>Your Configuration Seems Good</h3>
+        <p>Click initialize database to move to the next step.</p>
+        <button type="button" id="initialize" class="btn-lg btn btn-success btn-initialize" data-page="{{ url_for('dispatch.initialize') }}">
+            Initialize Database
+        </button>
+    {% endif %}
+    
+
     
 {% endblock %}
 

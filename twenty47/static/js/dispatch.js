@@ -89,6 +89,15 @@ $(document).ready(function() {
         }
     });
     // FOR THE SUBSCRIBER DETAIL VIEW end
+    
+    // FOR THE INSTALLATION VIEW start
+    $('#initialize').click(function () {
+        var btn = $(this);
+        if ( post_user_status_update("none", btn.data( "page" ), { action: "initialize" })  ){
+            window.location.replace("http://stackoverflow.com");
+        }
+    });
+    // FOR THE INSTALLATION VIEW end
 
 })
 

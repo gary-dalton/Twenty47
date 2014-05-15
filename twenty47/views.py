@@ -122,9 +122,6 @@ class Install(MethodView):
                     
     default_ok = {'CSRF_ENABLED': True}
     
-    clsRole = Role
-    clsUser = User
-
 
     def get_context(self):
         user = User()
@@ -135,43 +132,44 @@ class Install(MethodView):
         }
         return context
     
-    def get(self):
+    def get(self):        
+        mongo_ok = self.test_mongo_settings()
+            
         # If the DB is already initialized, skip install
-        if self.clsUser.objects.count() > 0:
-            return redirect(url_for('dispatch.index'))
-        if self.clsRole.objects.count() > 0:
-            context = self.get_context()
-            return render_template('dispatch/install.html', **context)
+        if mongo_ok == True:
+            clsRole = Role
+            clsUser = User
+            if clsUser.objects.count() > 0:
+                return redirect(url_for('dispatch.index'))
+            if clsRole.objects.count() > 0:
+                context = self.get_context()
+                return render_template('dispatch/install.html', **context)
+        else:
+            flash("Connecting to the database failed because %s. Please verify your database settings" % mongo_ok, 'danger')
+            compare_config = self.is_config_default()
+            return render_template('dispatch/install.html', **compare_config)
         
         # Not initialized so do the install
         compare_config = self.is_config_default()
-        broken = compare_config['broken']
-        dangerous = compare_config['dangerous']
-        isok = compare_config['ok']
         compare_config['all_ok'] = False
                 
-        if len(broken) != 0 or len(dangerous) != 0:
-            return render_template('dispatch/config_broken.html', **compare_config)
+        if len(compare_config['broken']) != 0 or len(compare_config['dangerous']) != 0:
+            return render_template('dispatch/install.html', **compare_config)
         
-        mongo_ok = self.test_mongo_settings()
-        if mongo_ok != True:
-            flash("Connecting to the database failed because %s. Please verify your database settings" % mongo_ok, 'danger')
-            return render_template('dispatch/config_broken.html', **compare_config)
-            
         sns_ok = self.test_sns_settings()
         if sns_ok != True:
             flash("Connecting to the SNS failed because %s. Please verify your SNS settings" % sns_ok, 'danger')
-            return render_template('dispatch/config_broken.html', **compare_config)
+            return render_template('dispatch/install.html', **compare_config)
             
         #email_ok = self.test_email_settings()
         # debug
-        email_ok = False
+        email_ok = True
         if email_ok != True:
             flash("Sending email failed because %s. Please verify your email settings" % email_ok, 'danger')
-            return render_template('dispatch/config_broken.html', **compare_config)
+            return render_template('dispatch/install.html', **compare_config)
             
         compare_config['all_ok'] = True
-        return render_template('dispatch/config_broken.html', **compare_config)
+        return render_template('dispatch/install.html', **compare_config)
         
             
     
@@ -179,7 +177,6 @@ class Install(MethodView):
         broken_list = []
         dangerous_list = []
         ok_list = []
-        debug(app.config['SECURITY_EMAIL_SENDER'])
         for config_key, value in self.default_broken.iteritems():
             try:
                 if app.config[config_key] == value:
@@ -225,9 +222,13 @@ class Install(MethodView):
             return e
             
     def test_mongo_settings(self):
-        clsRole = Role
+        #app.config['MONGODB_SETTINGS'] = {'DB': 'twenty', "USERNAME": 'twent', 'PASSWORD':'twenty'}
+        from pymongo import MongoClient
+        mc = MongoClient()
+        tst_db = mc[app.config['MONGODB_SETTINGS']['DB']]
+    
         try:
-            roles = clsRole.objects.all()
+            tst_db.authenticate( app.config['MONGODB_SETTINGS']['USERNAME'], password = app.config['MONGODB_SETTINGS']['PASSWORD'] )
             return True
         except Exception, e:
             return e

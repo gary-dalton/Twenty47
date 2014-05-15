@@ -230,3 +230,4 @@ def get_users_with_role(role_name=None, list_of=None):
         for user in users:
             the_list.append(user[list_of])
     return the_list
+ 
