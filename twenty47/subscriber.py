@@ -32,7 +32,7 @@ from flask.ext.security import login_required, roles_required, script
 from flask.ext.login import current_user
 from twenty47.models import Subscriber, User
 from twenty47 import app, debug, subscription_pending, subscription_updated
-import twenty46.utils
+from twenty47.utils import put_email_subscriber, put_sms_subscriber
 
 subscriber = Blueprint('subscriber', __name__, template_folder='templates')
 
@@ -124,12 +124,12 @@ class ResendConfirmation(MethodView):
         
         try:
             if request.form['action'] == "reconfirmEmail":
-                if utils.put_email_subscriber(request.form['email']):
+                if put_email_subscriber(request.form['email']):
                     return "True"
                 else:
                     return(app.config['DISPATCH_ERROR_GENERAL'])
             elif request.form['action'] == "reconfirmSMS":
-                if utils.put_sms_subscriber(request.form['smsphone']):
+                if put_sms_subscriber(request.form['smsphone']):
                     return "True"
                 else:
                     return(app.config['DISPATCH_ERROR_GENERAL'])

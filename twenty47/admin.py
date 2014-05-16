@@ -32,7 +32,7 @@ from flask.ext.security import login_required, roles_required, script
 from twenty47.models import Role, User, user_datastore, Subscriber, \
         IncidentType, UnitsImpacted, AssistanceRequested
 from twenty47 import app, debug, subscription_updated, sns_error
-import twenty47.utils
+from twenty47.utils import get_serializer, update_user_subscriptions
 from itsdangerous import BadSignature
 
 admin = Blueprint('admin', __name__, template_folder='templates')
@@ -42,10 +42,6 @@ class Pager(MethodView):
     cls = User
     
     def get(self, page=1):
-        #Buj
-        #debug(utils.get_activation_link('5367f1e79b986c933f88e6d9', 'makeregistered'), 'notice')
-        #debug(utils.get_users_with_role(role_name='SubMan', list_of='email'))
-        
         users = self.cls.objects.paginate(page=page, per_page=20)
         return render_template('admin/pager.html', users=users)
    
@@ -273,7 +269,7 @@ class RoleDetail(MethodView):
 class RemoteUserAdmin(MethodView):
     
     def get(self, payload):
-        s = utils.get_serializer()
+        s = get_serializer()
         try:
             paystr = s.loads(payload, max_age= app.config['DISPATCH_MAX_TOKEN_AGE'])
             listload =paystr.split(',')
@@ -438,7 +434,7 @@ def enable_subscription(user):
     '''
     user.subscription.enabled = True
     if user.save():
-        utils.update_user_subscriptions(user)
+        update_user_subscriptions(user)
         return True
     return False
     
