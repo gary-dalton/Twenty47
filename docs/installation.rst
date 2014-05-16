@@ -81,9 +81,11 @@ Edit the /etc/mongodb.conf file to enable auth. (set auth = true)
     
 Next, create a userAdminAnyDatabase role
 
-    use admin   # use the admin db
+    mongo
+
+    use admin
     
-    db.createUser({user:"siteUserAdmin", pwd:"password", roles:[{role: "userAdminAnyDatabase", db: "admin"}]})
+    db.createUser({user:"siteUserAdmin",pwd:"password",roles:[{role:"userAdminAnyDatabase",db:"admin"}]})
       
 Create Twenty47 Database
 ^^^^^^^^^^^^^^^^^^^^^^^^

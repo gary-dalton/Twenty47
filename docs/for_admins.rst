@@ -2,13 +2,6 @@
 For Administrators
 ################################
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-Purpose
-=======
 Twenty47 allows simple input of basic dispatch information. This data
 is then pushed to email or SMS subscribers. The protected Admin section
 provides access to user and subscriber administrative forms.
@@ -133,15 +126,19 @@ A trigger is an action taken by a user that triggers a separate action
 by Twenty47. There are many triggers, two of which are important for
 administration.
 
-======================  ============================    ====================
- Trigger                 Twenty47 Action                 Response via link
-======================  ============================    ====================
-User confirmed          Send email to Managers          * Set as Dispatch
-                                                        * Set as Registered
-                                                        * Deactivate
-Subscription requested  Send email to SubMans           * Approve
-                                                        * Deny
-======================  ============================    ====================
+======================  =========================   ====================
+ Trigger                 Twenty47 Action              Response via link
+======================  =========================   ====================
+User confirmed          Send email to Managers      Set as Dispatch
+
+                                                    Set as Registered
+                                                    
+                                                    Deactivate
+                                                    
+Subscription requested  Send email to SubMans       Approve
+
+                                                    Deny
+======================  =========================   ====================
 
 The administrative triggers will send emails which include action links.
 The action links may be clicked on to complete that action without

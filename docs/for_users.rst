@@ -2,13 +2,6 @@
 For Users
 ################################
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-Purpose
-=======
 Twenty47 allows simple input of basic dispatch information. This data
 is then pushed to email or SMS subscribers. For most users, there are
 2 forms available.
@@ -45,7 +38,7 @@ Email Confirmation
 ^^^^^^^^^^^^^^^^^^
 Once a Subscription Manager approves your request, you will received an
 email requiring you to confirm your request. This will come from 
-**Dispatch using Email** <no-reply\@sns.amazonaws.com>. Click the included
+*Dispatch using Email <no-reply\@sns.amazonaws.com>*. Click the included
 link to complete your subscription.
 
 .. image:: _static/email_sub_pending.png

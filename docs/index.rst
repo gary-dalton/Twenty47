@@ -9,7 +9,7 @@ Welcome to Twenty47's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    
    for_users
    for_admins
