@@ -25,16 +25,20 @@
 Module views.py documentation
 FLL handles all needed online forms, etc for FIRST Lego League
 """
-
+import datetime
 from twenty47 import db, app, debug, dispatch_created
 from flask import Blueprint, request, redirect, render_template, url_for, flash
 from flask.views import MethodView
+from flask.ext.login import current_user
+from flask.ext.security import login_required, roles_required
+from flask.ext.security.utils import encrypt_password
 from flask.ext.mongoengine.wtf import model_form
 from twenty47.models import Role, User, Dispatch, IncidentType, \
-            UnitsImpacted, AssistanceRequested
+            UnitsImpacted, AssistanceRequested, user_datastore
 from twenty47.forms import DispatchForm, InstallForm
-from flask.ext.login import current_user
-from flask.ext.security import login_required, roles_required, roles_accepted
+from twenty47.utils import test_mongo_settings
+
+
 
 dispatch = Blueprint('dispatch', __name__, template_folder = 'templates')
 
@@ -115,11 +119,9 @@ class Install(MethodView):
                     'DISPATCH_EMAIL_TOPIC': 'arn:aws:sns:us-zone-1:3456345645756756:Dispatch_Email',
                     'DISPATCH_SMS_TOPIC': 'arn:aws:sns:us-zone-1:3456345645756756:Dispatch_SMS',
                     }
-                    
     default_dangerous = {'SECRET_KEY': 'thesecretkey',
                     'SECURITY_PASSWORD_SALT': 'some_long_string_for_you_to_change',
                     }
-                    
     default_ok = {'CSRF_ENABLED': True}
     
 
@@ -133,7 +135,7 @@ class Install(MethodView):
         return context
     
     def get(self):        
-        mongo_ok = self.test_mongo_settings()
+        mongo_ok = test_mongo_settings()
             
         # If the DB is already initialized, skip install
         if mongo_ok == True:
@@ -171,7 +173,6 @@ class Install(MethodView):
         compare_config['all_ok'] = True
         return render_template('dispatch/install.html', **compare_config)
         
-            
     
     def is_config_default(self):
         broken_list = []
@@ -221,17 +222,6 @@ class Install(MethodView):
         except Exception, e:
             return e
             
-    def test_mongo_settings(self):
-        #app.config['MONGODB_SETTINGS'] = {'DB': 'twenty', "USERNAME": 'twent', 'PASSWORD':'twenty'}
-        from pymongo import MongoClient
-        mc = MongoClient()
-        tst_db = mc[app.config['MONGODB_SETTINGS']['DB']]
-    
-        try:
-            tst_db.authenticate( app.config['MONGODB_SETTINGS']['USERNAME'], password = app.config['MONGODB_SETTINGS']['PASSWORD'] )
-            return True
-        except Exception, e:
-            return e
             
     def test_sns_settings(self):
         from boto import sns
@@ -253,13 +243,21 @@ class Install(MethodView):
         else:
             return True
 
-class Initialize(MethodView):
-    clsRole = Role
-    clsIncidentTypes = IncidentType
-    clsUnitsImpacted = UnitsImpacted
-    clsAssistanceRequested = AssistanceRequested
-    
+class Initialize(MethodView): 
     def post(self):
+        # If the DB is already initialized, you should not be here
+        mongo_ok = test_mongo_settings()
+        if mongo_ok == True:
+            clsRole = Role
+            clsUser = User
+            if clsUser.objects.count() > 0:
+                return redirect(url_for('dispatch.index'))
+            if clsRole.objects.count() > 0:
+                return redirect(url_for('dispatch.first_user'))
+        else:
+            return redirect(url_for('dispatch.install'))
+        
+    
         start_roles = [{"description" : "Administrative (root) user", "name" : "Admin"},
                 { "description" : "User has completed the registration process", "name" : "Registered"},
                 {"description" : "Manages users. Receives notification emails of new users and may approve them.", "name" : "Manager"},
@@ -283,15 +281,70 @@ class Initialize(MethodView):
                     { "name" : "Larger Scale Response", "order" : 3, "shortCode" : "LG" },
                     ]
                     
-        # If the DB is already initialized, skip install
-        if self.clsRole.objects.count() > 0:
+        try:
+            if request.form['action'] == "initialize":
+                pass
+        except KeyError, e:
+            return redirect(url_for('dispatch.install'))
+            
+        for item in start_roles:
+            document = Role(name= item['name'], description= item['description'])
+            document.save()
+            
+        for item in start_it:
+            document = IncidentType(name= item['name'], shortCode= item['shortCode'], order= item['order'])
+            document.save()
+            
+        for item in start_ui:
+            document = UnitsImpacted(name= item['name'], shortCode= item['shortCode'], order= item['order'])
+            document.save()
+            
+        for item in start_ar:
+            document = AssistanceRequested(name= item['name'], shortCode= item['shortCode'], order= item['order'])
+            document.save()
+            
+        return (url_for('dispatch.first_user'))
+
+            
+class FirstUser(MethodView):
+    def get_context(self):
+        user = User()
+        form = InstallForm(request.form)
+            
+        context = {
+            "user": user,
+            "form": form,
+            "create": id is None
+        }
+        return context
+        
+    def get(self):
+        context = self.get_context()
+        return render_template('dispatch/first_user.html', **context)
+        
+    def post(self):        
+        context = self.get_context()
+        form = context.get('form')
+        
+        if form.validate():
+            form.password.data = encrypt_password(form.passwordagain.data)
+            del form.passwordagain
+            user = context.get('user')
+            form.populate_obj(user)
+            user.confirmed_at = datetime.datetime.now()
+            user.active = True
+            user.save()
+            start_roles = ["Admin", "Registered", "Manager", "SubMan", "Dispatch"]
+            for role in start_roles:
+                user_datastore.add_role_to_user(user, role)
+            flash("Congratualations, Twenty47 is now ready to use.", "success")
             return redirect(url_for('dispatch.index'))
-        else:
-            pass
+        return render_template('dispatch/first_user.html', **context)
     
 
 # Register the urls
 dispatch.add_url_rule('/', view_func=Home.as_view('index'))
 dispatch.add_url_rule('/install', view_func=Install.as_view('install'))
 dispatch.add_url_rule('/initialize', view_func=Initialize.as_view('initialize'))
+dispatch.add_url_rule('/firstuser', view_func=FirstUser.as_view('first_user'))
 dispatch.add_url_rule('/dispatch/create', defaults={'id': None},view_func=DispatchCreate.as_view('dispatch_create'))

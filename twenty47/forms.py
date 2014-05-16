@@ -28,7 +28,7 @@ FLL handles all needed online forms, etc for FIRST Lego League
 from flask_wtf import Form
 from wtforms import BooleanField, StringField, HiddenField, \
     DateTimeField, SelectField, TextAreaField, PasswordField
-from wtforms.validators import Length, InputRequired, Email
+from wtforms.validators import Length, InputRequired, Email, EqualTo
 from flask.ext.login import current_user
 import datetime
 
@@ -55,6 +55,6 @@ class InstallForm(Form):
     firstName = StringField('First Name',[Length(max=200), InputRequired()], default='Admin')
     lastName = StringField('Last Name', [Length(max=200), InputRequired()], default='Admin')
     email = StringField('Email Address', [Length(max=200), Email(), InputRequired()])
-    password = PasswordField('Password', [Length(max=255), InputRequired()])
-    passwordagain = PasswordField('Verify Password', [Length(max=255), InputRequired()])
+    password = PasswordField('Password', [Length(max=255), InputRequired(), EqualTo('passwordagain', message='Passwords must match')])
+    passwordagain = PasswordField('Confirm Password', [Length(max=255), InputRequired()])
 

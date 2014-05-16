@@ -93,9 +93,8 @@ $(document).ready(function() {
     // FOR THE INSTALLATION VIEW start
     $('#initialize').click(function () {
         var btn = $(this);
-        if ( post_user_status_update("none", btn.data( "page" ), { action: "initialize" })  ){
-            window.location.replace("http://stackoverflow.com");
-        }
+        post_to_redirect( btn.data( "page" ), { action: "initialize" })
+    //
     });
     // FOR THE INSTALLATION VIEW end
 
@@ -103,8 +102,6 @@ $(document).ready(function() {
 
 function post_user_status_update(userid, submit_to, form_data) {
     var success = false;
-    console.log(submit_to);
-    console.log(form_data);
     success = $.post( submit_to, form_data, function(return_value) {
         console.log(return_value);
         if (return_value == "True"){
@@ -114,4 +111,15 @@ function post_user_status_update(userid, submit_to, form_data) {
         return false;
     });
     return success;
+};
+
+function post_to_redirect(submit_to, form_data) {
+    var result = "";
+    console.log(submit_to);
+    console.log(form_data);
+    result = $.post( submit_to, form_data, function(return_value) {
+        console.log(return_value);
+        window.location.replace(return_value);
+        return return_value;
+    });
 };

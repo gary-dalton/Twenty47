@@ -231,3 +231,12 @@ def get_users_with_role(role_name=None, list_of=None):
             the_list.append(user[list_of])
     return the_list
  
+def test_mongo_settings():
+    from pymongo import MongoClient
+    mc = MongoClient()
+    tst_db = mc[app.config['MONGODB_SETTINGS']['DB']]
+    try:
+        tst_db.authenticate( app.config['MONGODB_SETTINGS']['USERNAME'], password = app.config['MONGODB_SETTINGS']['PASSWORD'] )
+        return True
+    except Exception, e:
+        return e

@@ -5,6 +5,8 @@
 
 
     <h2>First Time Installation of Twenty47</h2>
+    <p class="alert alert-success">Database was successfully initialized. Now let's add your Admin user.</p>
+    <p>The first user we add will have full access to all areas of Twenty47. Later, as more users join, you may delegate some of the roles.</p>
     <form action="?{{ request.query_string }}" method="post">
         {{ forms.render(form) }}
         <div class="actions">
