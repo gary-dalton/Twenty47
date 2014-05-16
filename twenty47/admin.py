@@ -163,32 +163,35 @@ class Detail(MethodView):
         return render_template('admin/detail.html', **context)
         
 
-        
 class Remove(MethodView):
     decorators = [login_required, roles_required('Admin')]
     
     def get_context(self, id=None, action=None):
-        
         if id:
             if action == "user":
                 target = User.objects.get_or_404(id=id)
-                form = model_form(User, field_args = {
+                form_cls = model_form(User, field_args = {
                     'firstName': {'label': 'First Name'},
                     'lastName': {'label': 'Last Name'},
                     })
+                del form_cls.roles
+                del form_cls.password
+                del form_cls.subscription
+                
                 if request.method == 'POST':
-                    form = form(request.form, inital=target._data)
+                    form = form_cls(request.form, inital=target._data)
                 else:
-                    form = form(obj=target)
+                    form = form_cls(obj=target)
+                    
             elif action == "role":
                 target = Role.objects.get_or_404(id=id)
-                form = model_form(Role)
+                form_cls = model_form(Role)
                 if request.method == 'POST':
-                    form = form(request.form, inital=target._data)
+                    form = form_cls(request.form, inital=target._data)
                 else:
-                    form = form(obj=target)
+                    form = form_cls(obj=target)
                     
-            form.roles.label_attr='name'
+            #form.roles.label_attr='name'
             context = {
                 "action": action,
                 "target": target,
@@ -198,7 +201,7 @@ class Remove(MethodView):
                 
         else:
             flash("Action failed, " + request.form['action'], 'danger')
-            return redirect(url_for('admin.index'))
+            return redirect(url_for('admin.user_list'))
             
     def get(self, id, action):
         context = self.get_context(id, action)
@@ -216,7 +219,7 @@ class Remove(MethodView):
                 pass
 
 
-        return redirect(url_for('admin.index'))
+        return redirect(url_for('admin.user_list'))
     
         
 class RoleDetail(MethodView):
