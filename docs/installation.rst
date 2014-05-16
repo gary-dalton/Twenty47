@@ -111,20 +111,29 @@ Twenty47.
     
     db.createUser( {user: "twenty47", pwd: "password", roles:["dbOwner"]})
     
+Git Twenty47
+------------
+Now lets get the Twenty47 code onto your server. Change to the directory
+you wish to install Twenty47.
+
+    mkdir -p /srv/www
+
+    cd /srv/www
+
+    git clone 'https://github.com/gary-dalton/Twenty47.git'
+    
 Virtualenv
 ----------
 I prefer to use Python virtualenv to reduce problems with versions and
 dependencies. See `vitualenv <https://virtualenv.pypa.io/en/latest/virtualenv.html/>`_.
 
-Change to the directory you wish to install Twenty47.
+Change to the your install directory.
 
-    mkdir -p /srv/www/twenty47
-
-    cd /srv/www/twenty47
+    cd /srv/www/Twenty47
     
 Make the virtualenv and start using it.
 
-    vitualenv venv
+    virtualenv venv
     
     . venv/bin/activate
     
@@ -173,13 +182,6 @@ as part of the SMS message, I recommend setting a very short DisplayName.
     
     conn.set_topic_attributes(topic, 'DisplayName', 'DSPH')
     
-
-Git Twenty47
-------------
-Now lets get the Twenty47 code onto your server. Make certain you are
-in the directory you wish to install to, then
-
-    git clone 'https://github.com/gary-dalton/Twenty47.git'
     
 Configuration and Initialization
 ================================
