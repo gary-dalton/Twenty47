@@ -116,11 +116,11 @@ Git Twenty47
 Now lets get the Twenty47 code onto your server. Change to the directory
 you wish to install Twenty47.
 
-    mkdir -p /srv/www
+    mkdir -p /var/www
 
-    cd /srv/www
+    cd /var/www
 
-    git clone 'https://github.com/gary-dalton/Twenty47.git'
+    git clone https://github.com/gary-dalton/Twenty47.git
     
 Virtualenv
 ----------
@@ -129,7 +129,7 @@ dependencies. See `vitualenv <https://virtualenv.pypa.io/en/latest/virtualenv.ht
 
 Change to the your install directory.
 
-    cd /srv/www/Twenty47
+    cd /var/www/Twenty47
     
 Make the virtualenv and start using it.
 
@@ -139,9 +139,7 @@ Make the virtualenv and start using it.
     
 Now let's start installing packages into our virtualenv.
 
-    pip install Flask flask-bcrypt flask-mongoengine flask-security
-    
-    pip install boto
+    pip install -r requirements.txt
     
 Amazon SNS
 -------------
@@ -188,6 +186,33 @@ Configuration and Initialization
 Only a few more steps to complete before Twenty47 is ready to handle
 your dispatches.
 
+Preparing Apache2
+-----------------
+There are a few caveats in regards to setting up Apache. If any of the
+following are different, you will have to modify some parts of
+preparing Apache2.
+ 
+* The base system is Ubuntu Linux
+* The installation directory is */var/www/Twenty47*
+* Virtualenv is being used at */var/www/Twenty47/venv*
+
+A WSGI start file, named *twenty47.wsgi*, is included. The first two lines
+of this are meant for activating the virtualenv. Please verify the settings
+and paths in this file before moving on.
+
+A sample apache conf file, named *apache_mod_wsgi_sample.conf*, is included.
+Make a copy of this file, then make any needed edits to it, then activate it.
+
+    cp apache_mod_wsgi_sample.conf /etc/apache2/sites-available/twenty47.conf
+    
+    vim /etc/apache2/sites-available/twenty47.conf
+    
+    a2ensite twenty47
+    
+    service apache2 reload
+    
+
+
 The Config File
 ---------------
 Open the config file, located at Twenty47/twenty47/config.py, for editing.
@@ -206,8 +231,7 @@ do review those and change them to match your circumstances.
 
 
 
-Preparing Apache2
------------------
+
     
     
 
