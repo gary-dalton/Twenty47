@@ -291,11 +291,11 @@ class RemoteUserAdmin(MethodView):
             completed_action = "Deactivated."
         elif action == "makeuser":
             # OK
-            user_datastore.add_role_to_user(user, "User")
+            user_datastore.add_role_to_user(user, user_datastore.find_or_create_role("User"))
             completed_action = "has User role."
         elif action == "makeregistered":
             # OK
-            user_datastore.add_role_to_user(user, "Registered")
+            user_datastore.add_role_to_user(user, user_datastore.find_or_create_role("Registered"))
             completed_action = "has Registered role."
         elif action == "subscriptiondeny":
             # OK
