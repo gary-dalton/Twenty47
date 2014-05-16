@@ -1,19 +1,7 @@
-.. Twenty47 documentation master file, created by
-   sphinx-quickstart on Fri May  9 16:48:24 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+################################
+Installation
+################################
 
-Installation of Twenty47
-====================================
-
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-   
-
-Introduction
-=============
 There are many possible ways to perform an effective installation, so please
 consider this as just a working example. I will guide you through the
 full provisioning of a server to creation of subscription lists and end on
@@ -207,11 +195,12 @@ Make a copy of this file, then make any needed edits to it, then activate it.
     
     vim /etc/apache2/sites-available/twenty47.conf
     
+    chown -R www-data:www-data /var/www/Twenty47
+    
     a2ensite twenty47
     
     service apache2 reload
     
-
 
 The Config File
 ---------------
@@ -229,20 +218,27 @@ Flask-Security
 In the config file, a number of settings are marked *Change these*. Please
 do review those and change them to match your circumstances.
 
-
-
-
+    vim config.py
     
+The config file is not usually reloaded by the application, therefore; you
+may need to reload apache while installing.
+
+    service apache2 reload
     
+Install
+-------
+Twenty47 will help guide you using the install script. Point your
+browser to http://yourdomain/install. The install script does the following:
 
-`Flask-Mail <http://pythonhosted.org/flask-mail/>`_
+* Check you config.py for default values
+* Verify your ability to connect to MongoDB
+* Verify your ability to send email
+* Verify your ability to connect to your SNS topics
+* Verify that no current data in the DB will be overwritten
 
+Once those initial checks are completed, you are asked to *Initialize
+the Database*. Go ahead and click that button.
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+The final step of the install is to add the first user. This user will
+have full persmissions over all settings. The granted roles may later
+be delegated or changed.

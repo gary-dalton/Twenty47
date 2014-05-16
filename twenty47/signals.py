@@ -27,7 +27,8 @@ FLL handles all needed online forms, etc for FIRST Lego League
 """
 from flask import flash, template_rendered
 from twenty47 import app, subscription_updated, subscription_pending, sns_error, dispatch_created
-from twenty47 import utils, debug
+from twenty47 import debug
+import twenty47.utils
 from flask.ext.security.signals import user_confirmed
 from flask.ext.login import user_logged_in
 

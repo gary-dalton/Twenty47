@@ -32,7 +32,7 @@ from flask.ext.security import login_required, roles_required, script
 from twenty47.models import Role, User, user_datastore, Subscriber, \
         IncidentType, UnitsImpacted, AssistanceRequested
 from twenty47 import app, debug, subscription_updated, sns_error
-from twenty47 import utils
+import twenty47.utils
 from itsdangerous import BadSignature
 
 admin = Blueprint('admin', __name__, template_folder='templates')

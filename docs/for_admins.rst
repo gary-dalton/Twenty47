@@ -1,5 +1,5 @@
 ################################
-Admin Documentation for Twenty47
+For Administrators
 ################################
 
 Contents:

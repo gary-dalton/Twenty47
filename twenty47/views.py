@@ -163,9 +163,9 @@ class Install(MethodView):
             flash("Connecting to the SNS failed because %s. Please verify your SNS settings" % sns_ok, 'danger')
             return render_template('dispatch/install.html', **compare_config)
             
-        #email_ok = self.test_email_settings()
+        email_ok = self.test_email_settings()
         # debug
-        email_ok = True
+        #email_ok = True
         if email_ok != True:
             flash("Sending email failed because %s. Please verify your email settings" % email_ok, 'danger')
             return render_template('dispatch/install.html', **compare_config)

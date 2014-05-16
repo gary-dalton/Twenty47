@@ -31,7 +31,8 @@ from flask.ext.mongoengine.wtf import model_form
 from flask.ext.security import login_required, roles_required, script
 from flask.ext.login import current_user
 from twenty47.models import Subscriber, User
-from twenty47 import app, debug, utils, subscription_pending, subscription_updated
+from twenty47 import app, debug, subscription_pending, subscription_updated
+import twenty46.utils
 
 subscriber = Blueprint('subscriber', __name__, template_folder='templates')
 

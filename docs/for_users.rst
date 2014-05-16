@@ -1,5 +1,5 @@
 ################################
-User Documentation for Twenty47
+For Users
 ################################
 
 Contents:

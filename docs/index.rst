@@ -9,12 +9,10 @@ Welcome to Twenty47's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    for_users
    for_admins
-   for_developers
-   requirements
    installation
 
 Introduction
@@ -27,9 +25,9 @@ This documentation is divided into 3 main categories. This should make
 it easier to only find the information needed for your level of use.
 Documentation exists specifically for:
 
-* Users, :ref:`for_users`
-* Admins, :ref:`for_admin`
-* Developers, :ref:`for_developers`
+* Users, :doc:`for_users`
+* Admins, :doc:`for_admins`
+* Installation, :doc:`installation`
 
 Requirements
 ============
@@ -44,12 +42,11 @@ The main requirements are:
 * py-boto
 * Amazon Web Services
 
-These requirements are given in more detail in :ref:`requirements`.
 
 Installation
 ============
 Once the requirements are met, the Twenty47 application may be installed
-on the server. See installation for more details, :ref:`installation`.
+on the server. See installation for more details, :doc:`installation`.
 
 
 Indices and tables
