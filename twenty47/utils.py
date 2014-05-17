@@ -240,3 +240,10 @@ def test_mongo_settings():
         return True
     except Exception, e:
         return e
+        
+def strip_non_digits(orig_str):
+    import string
+    orig_str = orig_str.encode('ascii','ignore')
+    allchar=string.maketrans('','')
+    nodigs=allchar.translate(allchar, string.digits)
+    return orig_str.translate(allchar, nodigs)

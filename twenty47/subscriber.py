@@ -32,7 +32,8 @@ from flask.ext.security import login_required, roles_required, script
 from flask.ext.login import current_user
 from twenty47.models import Subscriber, User
 from twenty47 import app, debug, subscription_pending, subscription_updated
-from twenty47.utils import put_email_subscriber, put_sms_subscriber
+from twenty47.utils import put_email_subscriber, put_sms_subscriber, strip_non_digits
+from wtforms import validators
 
 subscriber = Blueprint('subscriber', __name__, template_folder='templates')
 
@@ -42,7 +43,8 @@ class Detail(MethodView):
 
     def get_context(self):
         form_cls = model_form(Subscriber,field_args = {
-            'smsPhone': {'label': 'SMS Phone Number'},
+            'smsPhone': {'label': 'SMS Phone Number',
+                        'validators' : [validators.Length(min=10, max=10, message='Telephone must be exactly 10 digits.')]},
             'email': {'default': current_user.email},
             })
 
@@ -89,6 +91,8 @@ class Detail(MethodView):
     def post(self):        
         context = self.get_context()
         form = context.get('form')
+        
+        form.smsPhone.data = strip_non_digits(form.smsPhone.data)
       
         if form.validate():
             target = context.get('target')

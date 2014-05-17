@@ -57,4 +57,4 @@ class InstallForm(Form):
     email = StringField('Email Address', [Length(max=200), Email(), InputRequired()])
     password = PasswordField('Password', [Length(max=255), InputRequired(), EqualTo('passwordagain', message='Passwords must match')])
     passwordagain = PasswordField('Confirm Password', [Length(max=255), InputRequired()])
-
+    
