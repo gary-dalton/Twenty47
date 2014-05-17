@@ -86,7 +86,7 @@ def when_dispatch_created(sender, dispatch):
             dispatch.unitsImpacted.split("::")[0] + " " + \
             dispatch.assistanceRequested.split("::")[0] + " - " + \
             dispatch.responderName + " " + \
-            dispatch.responderPhone + " - " + \
+            dispatch.responderPhone + " :: " + \
             str(delta.days*24 + delta.seconds//3600) + "h"
     flash(smsmsg, 'success')
     
