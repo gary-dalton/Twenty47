@@ -60,29 +60,28 @@ python -m SimpleHTTPServer
           </button>
           <a class="navbar-brand" href="{{ url_for('dispatch.index') }}">Twenty47 Dispatch</a>
         </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="{{ url_for('dispatch.index') }}">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="{{ url_for('admin.user_list') }}">Admin</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.firstName }}  <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{ url_for_security('logout') }}">Logout</a></li>
-                <li><a href="{{ url_for_security('change_password') }}">Change Password</a></li>
-                <li><a href="/subscriber">Manage Subscription</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!--/.nav-collapse -->
       </div>
     </div>
            
 {%- endblock -%}
 
 {%- block secondbar -%}
-<!-- Secondary navbar -->        
+<div class="container">
+    <div class="content">
+    <p>
+    This is a private computing system which is restricted to authorized
+    individuals. Actual or attempted unauthorized use of this computer
+    system may result in criminal and/or civil prosecution. We reserve the
+    right to view, monitor, and record activity on the system without
+    notice or permission. Any information obtained by monitoring, reviewing,
+    or recording is subject to review by law enforcement organizations in
+    connection with the investigation or prosecution of possible criminal
+    activity on the system. If you are not an authorized user of this
+    system or do not consent to continued monitoring, exit the system at
+    this time.
+    </p>
+    </div>
+</div>
 {%- endblock -%}
 
     <div class="container">
