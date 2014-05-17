@@ -70,6 +70,7 @@ def get_sms_subscribers():
 def put_email_subscriber(email):
     try:
         result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email)
+        debug('Added email subscriber %s has ARN of %s' % (email, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_email_subscriber', e=e)
@@ -78,21 +79,35 @@ def put_email_subscriber(email):
 def put_sms_subscriber(phone):
     try:
         result = conn.subscribe(DISPATCH_SMS_TOPIC, 'sms', phone)
+        debug('Added sms subscriber %s has ARN of %s' % (phone, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
         sns_error.send(app, func='put_sms_subscriber', e=e)
     return False
     
-def del_email_subscriber():
+def del_email_subscriber(arn):
+    if arn == "PendingConfirmation":
+        debug("Cannot delete subscription because its still Pending")
+        return False
     try:
-        result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email)
+        result = conn.unsubscribe(arn)
+        debug("Deleted email subscription of ARN of %s." % (arn))
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
-        sns_error.send(app, func='put_email_subscriber', e=e)
+        sns_error.send(app, func='del_email_subscriber', e=e)
     return False
     
-def del_sms_subscribers():
-    pass
+def del_sms_subscribers(arn):
+    if arn == "PendingConfirmation":
+        debug("Cannot delete subscription because its still Pending")
+        return False
+    try:
+        result = conn.unsubscribe(arn)
+        debug("Deleted SMS subscription of ARN of %s." % (arn))
+        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+    except Exception, e:
+        sns_error.send(app, func='del_sms_subscribers', e=e)
+    return False
     
 def put_sns_sms_message(message):
     """Send an SMS via the Amazon SNS.
@@ -122,8 +137,41 @@ def put_sns_email_message(subject, template, **context):
         sns_error.send(app, func='put_sns_email_message', e=e)
     return False
 
+def update_user_subscriptions(user):
+    if not user.subscription:
+        debug("Why are we here")
+        return False
+    else:
+        debug(user.subscription.email)
+        if user.subscription.email:
+            current_subscribers = get_email_subscribers()
+            try:
+                user.subscription.email_arn = current_subscribers[user.subscription.email]
+                if user.subscription.status != "APPROVED" or (user.subscription.methods != "Both" and user.subscription.methods != "Email"):
+                    del_email_subscriber(user.subscription.email_arn)
+                    user.subscription.email_arn = ''
+            except KeyError:
+                if user.subscription.status == "APPROVED":
+                    if user.subscription.methods == "Both" or user.subscription.methods == "Email":
+                        user.subscription.email_arn = put_email_subscriber(user.subscription.email)
+                        
+        if user.subscription.smsPhone:
+            current_subscribers = get_sms_subscribers()
+            try:
+                user.subscription.sms_arn = current_subscribers['1' + user.subscription.smsPhone]
+                if user.subscription.status != "APPROVED" or (user.subscription.methods != "Both" and user.subscription.methods != "SMS Phone"):
+                    del_sms_subscribers('1' + user.subscription.smsPhone)
+                    user.subscription.sms_arn = ''
+            except KeyError:
+                if user.subscription.status == "APPROVED":
+                    if user.subscription.methods == "Both" or user.subscription.methods == "SMS Phone":
+                        user.subscription.sms_arn = put_sms_subscriber('1' + user.subscription.smsPhone)
+
+    user.save()
+    return True
     
-def update_user_subscriptions():
+    
+def update_all_user_subscriptions(user):
     
     current_email_subscribers = get_email_subscribers()
     # Create a list of just email addresses

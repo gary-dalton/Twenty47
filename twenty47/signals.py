@@ -43,7 +43,8 @@ def when_template_rendered(sender, template, context, **extra):
 @subscription_updated.connect_via(app)
 def when_subscription_updated(sender, user):
     # Works
-    update_user_subscriptions()
+    debug("In when_subscription_updated")
+    update_user_subscriptions(user)
     
 @subscription_pending.connect_via(app)
 def when_subscription_pending(sender, user):
