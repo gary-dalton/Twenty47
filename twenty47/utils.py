@@ -36,6 +36,24 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature
 mail = Mail(app)
 conn = sns.SNSConnection()
 
+def get_one_subscriber(topic, endpoint, nexttoken=None):
+    '''
+    Returns False or the subscription data:
+    {'Owner': '796928799269', 'Endpoint': 'gary@gruffgoat.com', 'Protocol': 'email', 'TopicArn': 'arn:aws:sns:us-east-1:796928799269:Dispatch_Email', 'SubscriptionArn': 'arn:aws:sns:us-east-1:796928799269:Dispatch_Email:784fe2e3-f495-4c63-85e2-2306c2b400df'}
+    '''
+    try:
+        subscribers_obj = conn.get_all_subscriptions_by_topic(topic, nexttoken)
+        for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
+            if subscriber['Endpoint'] == endpoint:
+                return subscriber
+        if subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken'] == None:
+            return False
+        else:
+            return get_one_subscriber(topic, endpoint, nexttoken)
+    except Exception, e:
+        sns_error.send(app, func='get_email_subscribers', e=e)
+    return False
+
 
 def get_all_subscribers():
     get_email_subscribers()
@@ -136,6 +154,8 @@ def put_sns_email_message(subject, template, **context):
     except Exception, e:
         sns_error.send(app, func='put_sns_email_message', e=e)
     return False
+
+
 
 def update_user_subscriptions(user):
     if not user.subscription:

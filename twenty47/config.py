@@ -31,6 +31,10 @@ MAIL_USERNAME = 'smtp email user'
 MAIL_PASSWORD = 'smtp email pwd'
 DEFAULT_MAIL_SENDER = 'email_sender@yourbiz.com'
 
+# Settings for Celery
+CELERY_BROKER_URL = 'amqp://guest@localhost//'
+CELERY_RESULT_BACKEND = 'amqp'
+
 # Settings for Twenty47
 DISPATCH_MAX_TOKEN_AGE = 432000
 # Change these

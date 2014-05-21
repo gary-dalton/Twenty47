@@ -20,4 +20,4 @@ py-bcrypt==0.4
 pymongo==2.7
 wsgiref==0.1.2
 Flask-Script==0.6.7
-
+celery==3.1.11
