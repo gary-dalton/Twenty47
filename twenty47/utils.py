@@ -96,7 +96,7 @@ def put_email_subscriber(email):
     
 def put_sms_subscriber(phone):
     try:
-        result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'sms', phone)
+        result = conn.subscribe(app.config['DISPATCH_SMS_TOPIC'], 'sms', phone)
         debug('Added sms subscriber %s has ARN of %s' % (phone, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
     except Exception, e:
