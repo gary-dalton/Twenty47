@@ -124,7 +124,7 @@ class ResendConfirmation(MethodView):
     
     def post(self, id):        
         user = User.objects.get_or_404(id=id)
-        debug("HERE")
+        debug("in class ResendConfirmation")
         
         try:
             if request.form['action'] == "reconfirmEmail":
@@ -133,7 +133,7 @@ class ResendConfirmation(MethodView):
                 else:
                     return(app.config['DISPATCH_ERROR_GENERAL'])
             elif request.form['action'] == "reconfirmSMS":
-                if put_sms_subscriber(request.form['smsphone']):
+                if put_sms_subscriber('1' + request.form['smsphone']):
                     return "True"
                 else:
                     return(app.config['DISPATCH_ERROR_GENERAL'])

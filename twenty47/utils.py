@@ -51,7 +51,7 @@ def get_one_subscriber(topic, endpoint, nexttoken=None):
         else:
             return get_one_subscriber(topic, endpoint, nexttoken)
     except Exception, e:
-        sns_error.send(app, func='get_email_subscribers', e=e)
+        sns_error.send(app, func='get_one_subscriber', e=e)
     return False
 
 
@@ -66,7 +66,7 @@ def get_email_subscribers():
     '''
     try:
         subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_EMAIL_TOPIC'])
-        subscribers = dict()
+        subscribers = {}
         for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
             debug('Email Subscriber %s has the ARN of %s.' % (subscriber['Endpoint'], subscriber['SubscriptionArn']))
             subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
@@ -77,7 +77,7 @@ def get_email_subscribers():
 def get_sms_subscribers():
     try:
         subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_SMS_TOPIC'])
-        subscribers = dict()
+        subscribers = {}
         for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
             subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
             debug('SMS Subscriber %s has the ARN of %s.' % (subscriber['Endpoint'], subscriber['SubscriptionArn']))
@@ -96,6 +96,7 @@ def put_email_subscriber(email):
     
 def put_sms_subscriber(phone):
     try:
+        debug(phone)
         result = conn.subscribe(app.config['DISPATCH_SMS_TOPIC'], 'sms', phone)
         debug('Added sms subscriber %s has ARN of %s' % (phone, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
         return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
@@ -105,26 +106,26 @@ def put_sms_subscriber(phone):
     
 def del_email_subscriber(arn):
     if arn == "PendingConfirmation":
-        debug("Cannot delete subscription because its still Pending")
+        debug("Cannot delete email subscription because its still Pending")
         return False
     try:
         result = conn.unsubscribe(arn)
         debug("Deleted email subscription of ARN of %s." % (arn))
-        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+        return True
     except Exception, e:
         sns_error.send(app, func='del_email_subscriber', e=e)
     return False
     
-def del_sms_subscribers(arn):
+def del_sms_subscriber(arn):
     if arn == "PendingConfirmation":
-        debug("Cannot delete subscription because its still Pending")
+        debug("Cannot delete SMS subscription because its still Pending")
         return False
     try:
         result = conn.unsubscribe(arn)
         debug("Deleted SMS subscription of ARN of %s." % (arn))
-        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+        return True
     except Exception, e:
-        sns_error.send(app, func='del_sms_subscribers', e=e)
+        sns_error.send(app, func='del_sms_subscriber', e=e)
     return False
     
 def put_sns_sms_message(message):
@@ -158,22 +159,104 @@ def put_sns_email_message(subject, template, **context):
 
 
 def update_user_subscriptions(user):
+    debug("In utils.update_user_subscriptions")
     if not user.subscription:
         debug("Why are we here")
         return False
     else:
         debug(user.subscription.email)
+        debug(user.subscription.smsPhone)
+        current_email_subscribers = get_email_subscribers()
+        current_sms_subscribers = get_sms_subscribers()
+        pending_or_emtpy = ['', 'PendingConfirmation', 'pending confirmation']
+        
+        if user.subscription.status != "APPROVED" or (user.subscription.methods != "Both" and user.subscription.methods != "Email"):
+            # Get the best version of the ARN
+            #if  user.subscription.email_arn == '' or user.subscription.email_arn == 'PendingConfirmation':
+            if user.subscription.email_arn in pending_or_emtpy:
+                try:
+                    user.subscription.email_arn = current_email_subscribers[user.subscription.email]
+                except KeyError:
+                    user.subscription.email_arn = ''
+            elif user.subscription.email_arn not in current_email_subscribers.values():
+                user.subscription.email_arn = ''
+            # Delete if there is an ARN
+            #if  user.subscription.email_arn != '' or user.subscription.email_arn != 'PendingConfirmation':
+            if user.subscription.email_arn not in pending_or_emtpy:
+                debug("Going to delete %s" % user.subscription.email)
+                if del_email_subscriber(user.subscription.email_arn) is not False:
+                    user.subscription.email_arn = ''
+                    
+        if user.subscription.status != "APPROVED" or (user.subscription.methods != "Both" and user.subscription.methods != "SMS Phone"):
+            # Get the best version of the ARN
+            #if  user.subscription.sms_arn == '' or user.subscription.sms_arn == 'PendingConfirmation':
+            if user.subscription.sms_arn in pending_or_emtpy:
+                try:
+                    user.subscription.sms_arn = current_sms_subscribers['1' + user.subscription.smsPhone]
+                except KeyError:
+                    user.subscription.sms_arn = ''
+            elif user.subscription.sms_arn not in current_sms_subscribers.values():
+                user.subscription.sms_arn = ''
+            # Delete if there is an ARN
+            #if  user.subscription.sms_arn != '' or user.subscription.sms_arn != 'PendingConfirmation':
+            if user.subscription.sms_arn not in pending_or_emtpy:
+                debug("Going to delete %s" % user.subscription.smsPhone)
+                if del_sms_subscriber(user.subscription.sms_arn) is not False:
+                    user.subscription.sms_arn = ''
+                    
+        if user.subscription.status == "APPROVED":
+            if user.subscription.methods == "Both" or user.subscription.methods == "Email":
+                if len(user.subscription.email) > 5:                
+                    # Already subscribed?
+                    try:
+                        arn = current_email_subscribers[user.subscription.email]
+                    except KeyError:
+                        arn = put_email_subscriber(user.subscription.email)
+                        if arn is False:
+                            sns_error.send(app, func='update_user_subscriptions', e='Unable to put_email_subscriber')
+                    # Change email address?
+                    #if user.subscription.email_arn != '' or user.subscription.email_arn != 'PendingConfirmation':
+                    if user.subscription.email_arn not in pending_or_emtpy:
+                        if user.subscription.email_arn != arn:
+                            debug("Going to delete %s" % user.subscription.email)
+                            del_email_subscriber(user.subscription.email_arn)
+                    user.subscription.email_arn = arn
+                
+            if user.subscription.methods == "Both" or user.subscription.methods == "SMS Phone":
+                if len(user.subscription.smsPhone) > 7:
+                    # Already subscribed?
+                    try:
+                        arn = current_sms_subscribers['1' + user.subscription.smsPhone]
+                    except KeyError:
+                        arn = put_sms_subscriber('1' + user.subscription.smsPhone)
+                        if arn is False:
+                            sns_error.send(app, func='update_user_subscriptions', e='Unable to put_sms_subscriber')
+                    # Change sms number?
+                    #if user.subscription.sms_arn != '' or user.subscription.sms_arn != 'PendingConfirmation':
+                    if user.subscription.sms_arn not in pending_or_emtpy:
+                        if user.subscription.sms_arn != arn:
+                            debug("Going to delete %s" % user.subscription.smsPhone)
+                            del_sms_subscriber(user.subscription.sms_arn)
+                    user.subscription.sms_arn = arn
+                    
+        debug(user.subscription.email_arn)
+        debug(user.subscription.sms_arn)           
+        user.save()
+        return True
+        '''
         if user.subscription.email:
             current_subscribers = get_email_subscribers()
             try:
                 user.subscription.email_arn = current_subscribers[user.subscription.email]
                 if user.subscription.status != "APPROVED" or (user.subscription.methods != "Both" and user.subscription.methods != "Email"):
-                    del_email_subscriber(user.subscription.email_arn)
-                    user.subscription.email_arn = ''
+                    if del_email_subscriber(user.subscription.email_arn) not False:
+                        user.subscription.email_arn = ''
             except KeyError:
                 if user.subscription.status == "APPROVED":
                     if user.subscription.methods == "Both" or user.subscription.methods == "Email":
                         user.subscription.email_arn = put_email_subscriber(user.subscription.email)
+                        if user.subscription.email_arn is False:
+                            sns_error.send(app, func='update_user_subscriptions', e='Unable to put_email_subscriber')
                         
         if user.subscription.smsPhone:
             current_subscribers = get_sms_subscribers()
@@ -186,9 +269,8 @@ def update_user_subscriptions(user):
                 if user.subscription.status == "APPROVED":
                     if user.subscription.methods == "Both" or user.subscription.methods == "SMS Phone":
                         user.subscription.sms_arn = put_sms_subscriber('1' + user.subscription.smsPhone)
+        '''
 
-    user.save()
-    return True
     
     
 def update_all_user_subscriptions(user):

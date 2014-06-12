@@ -24,12 +24,12 @@
         <div class="col-md-6">
             {% if target.status == "APPROVED" %}
                 {% if target.methods == "Email" or target.methods == "Both" %}            
-                    <p><button type="button" id="reconfirmEmail" class="btn-lg btn btn-warning" data-page="{{ url_for('subscriber.resend', id=current_user.id) }}" data-user="{{ current_user.id }}" data-email="{{ current_user.email }}">
+                    <p><button type="button" id="reconfirmEmail" class="btn-lg btn btn-warning" data-page="{{ url_for('subscriber.resend', id=current_user.id) }}" data-user="{{ current_user.id }}" data-email="{{ current_user.subscription.email }}">
                         Resend Email Confirmation
                     </button></p>
                 {% endif %}
                 {% if target.methods == "SMS Phone" or target.methods == "Both" %} 
-                    <p><button type="button" id="reconfirmSMS" class="btn-lg btn btn-warning" data-page="{{ url_for('subscriber.resend', id=current_user.id) }}" data-user="{{ current_user.id }}" data-smsphone="{{ current_user.smsPhone }}">
+                    <p><button type="button" id="reconfirmSMS" class="btn-lg btn btn-warning" data-page="{{ url_for('subscriber.resend', id=current_user.id) }}" data-user="{{ current_user.id }}" data-smsphone="{{ current_user.subscription.smsPhone }}">
                         Resend SMS Confirmation
                     </button></p>
                 {% endif %}

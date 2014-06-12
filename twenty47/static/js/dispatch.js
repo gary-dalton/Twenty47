@@ -102,6 +102,8 @@ $(document).ready(function() {
 
 function post_user_status_update(userid, submit_to, form_data) {
     var success = false;
+    console.log(submit_to);
+    console.log(form_data);
     success = $.post( submit_to, form_data, function(return_value) {
         console.log(return_value);
         if (return_value == "True"){
