@@ -26,9 +26,12 @@ Module views.py documentation
 FLL handles all needed online forms, etc for FIRST Lego League
 """
 from flask import flash, template_rendered
-from twenty47 import app, subscription_updated, subscription_pending, sns_error, dispatch_created
+from twenty47 import (app, subscription_updated, subscription_pending,
+    sns_error, dispatch_created)
 from twenty47 import debug
-from twenty47.utils import update_user_subscriptions, send_mail, get_activation_link, get_users_with_role, put_sns_email_message, put_sns_sms_message
+from twenty47.utils import (update_user_subscriptions, send_mail, 
+    get_activation_link, get_users_with_role, put_sns_email_message,
+    put_sns_sms_message)
 from flask.ext.security.signals import user_confirmed
 from flask.ext.login import user_logged_in
 
