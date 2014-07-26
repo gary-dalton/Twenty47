@@ -25,8 +25,11 @@ subscription_pending = twenty47_signals.signal("subscription-pending")
 sns_error = twenty47_signals.signal("sns-error")
 dispatch_created = twenty47_signals.signal("dispatch-created")
 
+
 if app.config['DEBUG']:
-    debug = flash
+    def debug(*args):
+        pass
+    #debug = flash
 else:
     def debug(*args):
         pass

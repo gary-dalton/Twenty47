@@ -22,9 +22,12 @@
 #  
 #  
 """
-Module views.py documentation
-FLL handles all needed online forms, etc for FIRST Lego League
+Module utils.py documentation
+A variety of utilities used by Twenty47. These are mostly used
+to interact with AWS through boto though some other utilities
+are provided.
 """
+import sys
 from flask.ext.mail import Message
 from twenty47 import app, debug, sns_error
 from flask import render_template, flash, abort, redirect, url_for
@@ -36,111 +39,128 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature
 mail = Mail(app)
 conn = sns.SNSConnection()
 
-def get_one_subscriber(topic, endpoint, nexttoken=None):
+def put_subscriber(topic, method, endpoint, conn=conn):
+    '''
+    Returns False or the subscription ARN:
+    {'SubscribeResponse': {'SubscribeResult': {'SubscriptionArn': 'arn:aws:sns:us-east-1:123456789012:Dispatch_Email:2a9f687f-2313-411f-88c8-4cce9b29c53b'}, 'ResponseMetadata': {'RequestId': 'a8763b99-33a7-11df-a9b7-05d48da6f042'}}}
+    Tested
+    '''
+    try:
+        result = conn.subscribe(topic, method, endpoint)
+        debug('Added %s subscriber %s has ARN of %s' % (method, endpoint, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
+        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+    except Exception, e:
+        return
+        sns_error.send(app, func='put_email_subscriber', e=e)
+    return False
+    
+def get_one_subscriber(topic, endpoint, nexttoken=None, conn=conn):
     '''
     Returns False or the subscription data:
     {'Owner': '796928799269', 'Endpoint': 'gary@gruffgoat.com', 'Protocol': 'email', 'TopicArn': 'arn:aws:sns:us-east-1:796928799269:Dispatch_Email', 'SubscriptionArn': 'arn:aws:sns:us-east-1:796928799269:Dispatch_Email:784fe2e3-f495-4c63-85e2-2306c2b400df'}
+    Tested
     '''
     try:
         subscribers_obj = conn.get_all_subscriptions_by_topic(topic, nexttoken)
         for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
             if subscriber['Endpoint'] == endpoint:
                 return subscriber
-        if subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken'] == None:
+        if subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken'] is None:
             return False
         else:
-            return get_one_subscriber(topic, endpoint, nexttoken)
+            nexttoken = subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken']
+            return get_one_subscriber(topic, endpoint, nexttoken, conn)
     except Exception, e:
+        return ('Error: %s' % (e))
         sns_error.send(app, func='get_one_subscriber', e=e)
     return False
-
-
-def get_all_subscribers():
-    get_email_subscribers()
-    get_sms_subscribers()
-    return
-
-def get_email_subscribers():
-    '''
-    Returns the subscribers email address and the ARN
-    '''
+    
+def del_subscriber(arn, conn=conn):
+    if arn == "PendingConfirmation":
+        debug("Cannot delete subscription because its still Pending")
+        return False
     try:
-        subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_EMAIL_TOPIC'])
-        subscribers = {}
-        for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
-            debug('Email Subscriber %s has the ARN of %s.' % (subscriber['Endpoint'], subscriber['SubscriptionArn']))
-            subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
+        result = conn.unsubscribe(arn)
+        debug("Deleted subscription of ARN of %s." % (arn))
+        return True
     except Exception, e:
+        return ('Error: %s' % (e))
+        sns_error.send(app, func='del_subscriber', e=e)
+    return False
+    
+def put_email_subscriber(email, conn=conn):
+    return(put_subscriber(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email, conn))
+    
+def put_sms_subscriber(phone, conn=conn):
+    return(put_subscriber(app.config['DISPATCH_SMS_TOPIC'], 'sms', phone, conn))
+
+def get_topic_subscribers(topic, nexttoken=None, subscribers=None, conn=conn):
+    '''
+    Returns a dictionary of the subscribers' endpoints and the ARNs
+    '''
+    if subscribers is None:
+        subscribers = {}
+    try:
+        subscribers_obj = conn.get_all_subscriptions_by_topic(topic, nexttoken)
+        nexttoken = subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken']
+        for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
+            subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
+        if nexttoken is None:
+            return subscribers
+        else:
+            return(get_topic_subscribers(topic, nexttoken, subscribers, conn))
+    except Exception, e:
+        return ('Error: %s' % (e))
         sns_error.send(app, func='get_email_subscribers', e=e)
     return subscribers
-        
-def get_sms_subscribers():
-    try:
-        subscribers_obj = conn.get_all_subscriptions_by_topic(app.config['DISPATCH_SMS_TOPIC'])
-        subscribers = {}
-        for subscriber in subscribers_obj['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['Subscriptions']:
-            subscribers[subscriber['Endpoint']] = subscriber['SubscriptionArn']
-            debug('SMS Subscriber %s has the ARN of %s.' % (subscriber['Endpoint'], subscriber['SubscriptionArn']))
-    except Exception, e:
-        sns_error.send(app, func='get_sms_subscribers', e=e)
-    return subscribers
+    
+def get_all_subscribers(conn=conn):
+    subscribers = get_email_subscribers(conn=conn)
+    subscribers.update(get_sms_subscribers(conn=conn))
+    return(subscribers)
 
-def put_email_subscriber(email):
+def get_email_subscribers(conn=conn):
+    return (get_topic_subscribers(app.config['DISPATCH_EMAIL_TOPIC'], nexttoken=None, subscribers=None, conn=conn))
+        
+def get_sms_subscribers(conn=conn):
+    return (get_topic_subscribers(app.config['DISPATCH_SMS_TOPIC'], nexttoken=None, subscribers=None, conn=conn))
+    
+def del_email_subscriber(arn, conn=conn):
+    return del_subscriber(arn, conn=conn)
+    
+def del_sms_subscriber(arn, conn=conn):
+    return del_subscriber(arn, conn=conn)
+
+def put_sns_message(topic, message, subject=None, conn=conn):
+    """Send message via Amazon SNS.
+
+    :param message: Plain text message
+    """
     try:
-        result = conn.subscribe(app.config['DISPATCH_EMAIL_TOPIC'], 'email', email)
-        debug('Added email subscriber %s has ARN of %s' % (email, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
-        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+        result = conn.publish(topic=topic, message=message)
+        return result
     except Exception, e:
-        sns_error.send(app, func='put_email_subscriber', e=e)
+        return ('Error: %s' % (e))
+        sns_error.send(app, func='put_sns_sms_message', e=e)
     return False
     
-def put_sms_subscriber(phone):
-    try:
-        debug(phone)
-        result = conn.subscribe(app.config['DISPATCH_SMS_TOPIC'], 'sms', phone)
-        debug('Added sms subscriber %s has ARN of %s' % (phone, result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']))
-        return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
-    except Exception, e:
-        sns_error.send(app, func='put_sms_subscriber', e=e)
-    return False
-    
-def del_email_subscriber(arn):
-    if arn == "PendingConfirmation":
-        debug("Cannot delete email subscription because its still Pending")
-        return False
-    try:
-        result = conn.unsubscribe(arn)
-        debug("Deleted email subscription of ARN of %s." % (arn))
-        return True
-    except Exception, e:
-        sns_error.send(app, func='del_email_subscriber', e=e)
-    return False
-    
-def del_sms_subscriber(arn):
-    if arn == "PendingConfirmation":
-        debug("Cannot delete SMS subscription because its still Pending")
-        return False
-    try:
-        result = conn.unsubscribe(arn)
-        debug("Deleted SMS subscription of ARN of %s." % (arn))
-        return True
-    except Exception, e:
-        sns_error.send(app, func='del_sms_subscriber', e=e)
-    return False
-    
-def put_sns_sms_message(message):
-    """Send an SMS via the Amazon SNS.
+def put_sns_sms_message(message, conn=conn):
+    """Send an SMS.
 
     :param message: Plain text message, max length is 160 characters
     """
     try:
         result = conn.publish(topic=app.config['DISPATCH_SMS_TOPIC'], message=message)
-        #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+        return result
     except Exception, e:
-        sns_error.send(app, func='put_sns_sms_message', e=e)
+        return ('Error: %s' % (e))
+        sns_error.send(app, func='put_sns_email_message', e=e)
     return False
     
-def put_sns_email_message(subject, template, **context):
+    return put_sns_message(app.config['DISPATCH_SMS_TOPIC'], message[:150])
+    
+    
+def put_sns_email_message(subject, template, conn=conn, **context):
     """Send an email via the Amazon SNS.
 
     :param subject: Email subject
@@ -148,11 +168,13 @@ def put_sns_email_message(subject, template, **context):
     """
     ctx = ('dispatch/sns', template)
     message = render_template('%s/%s.txt' % ctx, **context)
+    #return put_sns_message(app.config['DISPATCH_EMAIL_TOPIC'], message=message, subject=subject)
     
     try:
         result = conn.publish(topic=app.config['DISPATCH_EMAIL_TOPIC'], message=message, subject=subject)
-        #return result['SubscribeResponse']['SubscribeResult']['SubscriptionArn']
+        return result
     except Exception, e:
+        return ('Error: %s' % (e))
         sns_error.send(app, func='put_sns_email_message', e=e)
     return False
 

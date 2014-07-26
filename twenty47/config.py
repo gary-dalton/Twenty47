@@ -35,6 +35,16 @@ DEFAULT_MAIL_SENDER = 'email_sender@yourbiz.com'
 CELERY_BROKER_URL = 'amqp://guest@localhost//'
 CELERY_RESULT_BACKEND = 'amqp'
 
+# Logging
+LOG_TO_FILE = True
+LOG_FILENAME = 'twenty47.log'
+LOG_FILE_LEVEL = 20 # CRITICAL=50, ERROR=40, WARNING=30, INFO=20,DEBUG=10
+LOG_TO_EMAIL = False
+LOG_EMAIL_SUBJECT = 'Twenty47 Error'
+LOG_EMAIL_TO = 'email_sender@yourbiz.com'
+LOG_EMAIL_LEVEL = 30 # CRITICAL=50, ERROR=40, WARNING=30, INFO=20,DEBUG=10
+
+
 # Settings for Twenty47
 DISPATCH_MAX_TOKEN_AGE = 432000
 # Change these

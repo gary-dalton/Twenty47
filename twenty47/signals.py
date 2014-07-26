@@ -62,6 +62,8 @@ def when_subscription_pending(sender, user):
 def when_sns_error(app, func, e):
     # Works
     send_mail('SNS Error', ['gary@gruffgoat.com'], 'sns_error', func=func, e=e)
+    HERE
+    app.logger.error('An error occurred')
 
 @user_confirmed.connect_via(app)
 def when_user_confirmed(sender, user):

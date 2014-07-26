@@ -3,6 +3,7 @@ import twenty47
 import unittest
 import tempfile
 
+
 class Twenty47TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -15,8 +16,7 @@ class Twenty47TestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(twenty47.app.config['DATABASE'])
 
-if __name__ == '__main__':
-    unittest.main()
+
 """ 
 
    
